@@ -4,7 +4,7 @@ class hero():
     def __init__(self,money,hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,stat_points,armor):
         self.money = money
         self.inventory = []
-        self.hunger = hunger
+        self.hunger = poop
         self.health = health
         self.strength = strength
         self.equipped_spell = equipped_spell
