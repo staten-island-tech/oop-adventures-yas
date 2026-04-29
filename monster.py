@@ -1,4 +1,5 @@
 import random
+
 class monster():
     def __init__(self, species, hp, attack, level):
         self.species = species
