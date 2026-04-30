@@ -1,10 +1,11 @@
 import random
-
+import monster
+import math
 class hero():
     def __init__(self,money,hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,stat_points,armor):
         self.money = money
         self.inventory = []
-        self.hunger = poop
+        self.hunger = hunger
         self.health = health
         self.strength = strength
         self.equipped_spell = equipped_spell
@@ -15,8 +16,13 @@ class hero():
         self.stat_points = stat_points
         self.armor = armor
 
-    def attack(self,strength,health):
-        monster.hp -=(1*(1+(strength/100))+(weapon.attack))
+    def attack(self, monster, strength,):
+        monster.hp -=1*(1+(strength/100))
+        monster.hp = math.ceil(monster.hp)
+        if monster.hp < 0:
+            monster.hp = 0
+        if monster.hp == 0:
+            print(f"You defeated {monster.species}!")
 
     def heal(self,health,inventory):
         for i in self.inventory:

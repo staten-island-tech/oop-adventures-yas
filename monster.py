@@ -1,4 +1,5 @@
 import random
+import hero
 
 class monster():
     def __init__(self, species, hp, attack, level):
@@ -6,8 +7,6 @@ class monster():
         self.hp = hp
         self.attack = attack
         self.level = level
-    def take_damage(self, damage):
-        self.hp -= damage
     def strike(self):
         hurt = (self.attack * 1.5)-"player armor"
         "player health - hurt"
