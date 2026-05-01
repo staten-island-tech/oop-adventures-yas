@@ -12,7 +12,7 @@ import arcade
 
 SPRITE_SCALING = 0.5
 
-WINDOW_WIDTH = 1280
+WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1280
 WINDOW_TITLE = "Sprite Move with Scrolling Screen Example"
 
@@ -47,7 +47,7 @@ class GameView(arcade.View):
         super().__init__()
 
         # Sprite lists
-        self.player_list = None
+        self.player_list = ""
         self.wall_list = None
 
         # Set up the player
@@ -125,7 +125,7 @@ class GameView(arcade.View):
         # Draw the GUI
         arcade.draw_rect_filled(
             arcade.rect.XYWH(self.width // 2, 20, self.width, 40),
-            color=arcade.color.ALMOND
+            color=arcade.color.BISTRE 
         )
         text = (
             f"Scroll value: ("
