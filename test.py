@@ -73,7 +73,7 @@ class GameView(arcade.View):
 
         # Set up the player
         self.player_sprite = arcade.Sprite(
-            ":resources:images/animated_characters/female_person/femalePerson_idle.png",
+            "sprite.png",
             scale=0.4,
         )
         self.player_sprite.center_x = 256
