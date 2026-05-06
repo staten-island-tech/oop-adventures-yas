@@ -74,7 +74,7 @@ class GameView(arcade.View):
         # Set up the player
         self.player_sprite = arcade.Sprite(
             "sprite.png",
-            scale=0.4,
+            scale=0.008,
         )
         self.player_sprite.center_x = 256
         self.player_sprite.center_y = 512

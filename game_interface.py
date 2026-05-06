@@ -1,7 +1,8 @@
 import random
 import arcade
 
-SPRITE_SCALING = 0.5
+SPRITE_SCALING = 5
+WALL_SCALING = 5
 WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1280
 WINDOW_TITLE = "The Unbinding of Isaac"
@@ -36,8 +37,8 @@ class Interface(arcade.View):
     def setup(self):
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
-        self.player_sprite = arcade.Sprite("sprite.png")
-        self.wall_sprite = arcade.Sprite("wall.png")
+        self.player_sprite = arcade.Sprite("sprite.png", SPRITE_SCALING)
+        self.wall_sprite = arcade.Sprite("wall.png", WALL_SCALING)
         self.wall_list.append(self.wall_sprite)
         self.player_list.append(self.player_sprite)
         self.player_sprite.center_x = 100
@@ -51,17 +52,53 @@ class Interface(arcade.View):
         self.wall_list.draw()
         self.camera_gui.use()
         arcade.draw_lrbt_rectangle_filled(0, self.width, 0, 40, arcade.color.BISTRE)
-
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.UP:
+            self.up_pressed = True
+        elif key == arcade.key.DOWN:
+            self.down_pressed = True
+        elif key == arcade.key.LEFT:
+            self.left_pressed = True
+        elif key == arcade.key.RIGHT:
+            self.right_pressed = True
+    def on_key_release(self, key, modifiers):
+        if key == arcade.key.UP:
+            self.up_pressed = False
+        elif key == arcade.key.DOWN:
+            self.down_pressed = False
+        elif key == arcade.key.LEFT:
+            self.left_pressed = False
+        elif key == arcade.key.RIGHT:
+            self.right_pressed = False
+    def on_update(self, delta_time):
+        self.player_sprite.change_x = 0
+        self.player_sprite.change_y = 0
+        if self.up_pressed and not self.down_pressed:
+            self.player_sprite.change_y = PLAYER_MOVEMENT_SPEED
+        elif self.down_pressed and not self.up_pressed:
+            self.player_sprite.change_y = -PLAYER_MOVEMENT_SPEED
+        if self.left_pressed and not self.right_pressed:
+            self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
+        elif self.right_pressed and not self.left_pressed:
+            self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
+        self.physics_engine.update()
+        self.scroll_to_player()
+    def scroll_to_player(self):
+        new_position = arcade.camera.grips.constrain_boundary_xy(
+            self.camera_sprites.view_data, CAMERA_BOUNDARY, self.player_sprite.position
+        )
+        self.camera_sprites.position = arcade.math.lerp_2d(
+            self.camera_sprites.position, (new_position[0], new_position[1]), CAMERA_SPEED
+        )
+    def on_resize(self, width: int, height: int):
+        super().on_resize(width, height)
+        self.camera_sprites.match_window()
+        self.camera_gui.match_window(position=True)
 def main():
-    # Create a window class. This is what actually shows up on screen
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-     # Create and setup the GameView
     game = Interface()
     game.setup()
-    # Show GameView on screen
     window.show_view(game)
-
-        # Start the arcade game loop
     arcade.run()
 
 
