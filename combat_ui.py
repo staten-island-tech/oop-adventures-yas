@@ -6,10 +6,16 @@ import hero
 def combat_ui():
     combat=tk.Tk()
     combat.title("Battle Started!!")
-    combat.geometry("1920x1080")
+    combat.geometry("1920x1280")
     combat.configure(bg = "red")
+
     bg = tk.PhotoImage(file="image.png")
     bg_label = tk.Label(combat, image=bg)
-    bg_label.place(x=0, y=0, width=1920, height=1080)
+    bg_label.place(relheight=1, relwidth=1)
+
+    player = tk.PhotoImage(file="sprite.png")
+    player_label = tk.Label(combat, image=player)
+    player_label.place(relx=0.1, rely=0.5, anchor=tk.CENTER, width=500, height=500)
+
     combat.mainloop()
 combat_ui()
