@@ -15,7 +15,7 @@ def combat_ui():
 
     player = tk.PhotoImage(file="sprite.png")
     player_label = tk.Label(combat, image=player)
-    player_label.place(relx=0.1, rely=0.5, anchor=tk.CENTER, width=500, height=500)
+    player_label.place(relx=0.2, rely=0.5, anchor=tk.CENTER, width=500, height=500)
 
     combat.mainloop()
 combat_ui()

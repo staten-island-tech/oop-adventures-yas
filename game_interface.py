@@ -35,11 +35,34 @@ class Interface(arcade.View):
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
     def setup(self):
+
+        layer_options = {
+            "Platforms": {
+                "use_spatial_hash": True
+            }
+        }
+
+        # Load our TileMap
+        self.tile_map = arcade.load_tilemap(
+            "tilemap",
+            scaling=TILE_SCALING,
+            layer_options=layer_options,
+        )
+
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
+
+        self.player_texture = arcade.load_texture(
+            ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
+        )
+
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
+
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
+            self.player_sprite, walls=self.scene["object layer"], gravity_constant=GRAVITY
+        )
+
         self.player_list = arcade.SpriteList()
-        self.wall_list = arcade.SpriteList()
         self.player_sprite = arcade.Sprite("sprite.png", SPRITE_SCALING)
-        self.wall_sprite = arcade.Sprite("wall.png", WALL_SCALING)
-        self.wall_list.append(self.wall_sprite)
         self.player_list.append(self.player_sprite)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
