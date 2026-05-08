@@ -37,6 +37,24 @@ class Interface(arcade.View):
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
     def setup(self):
+
+        layer_options = {
+            "Platforms": {
+                "use_spatial_hash": True
+            }
+        }
+
+        # Load our TileMap
+        self.tile_map = arcade.load_tilemap(
+            "test_map.json",
+            scaling=SPRITE_SCALING,
+            layer_options=layer_options,
+        )
+
+        # Create our Scene Based on the TileMap
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
+
+
         self.player_list = arcade.SpriteList()
         self.player_sprite = arcade.Sprite("sprite.png", SPRITE_SCALING)
         self.player_list.append(self.player_sprite)
