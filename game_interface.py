@@ -7,7 +7,7 @@ WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1280
 WINDOW_TITLE = "The Unbinding of Isaac"
 VIEWPORT_MARGIN = 600
-GRAVITY = 1
+GRAVITY = 0
 
 HORIZONTAL_BOUNDARY = 300
 VERTICAL_BOUNDARY = 300
@@ -56,7 +56,7 @@ class Interface(arcade.View):
 
 
         self.player_list = arcade.SpriteList()
-        self.player_sprite = arcade.Sprite("sprite.png", SPRITE_SCALING)
+        self.player_sprite = arcade.Sprite("game_sprite.png", SPRITE_SCALING)
         self.player_list.append(self.player_sprite)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
@@ -68,7 +68,7 @@ class Interface(arcade.View):
         self.clear()
         self.camera_sprites.use()
         self.player_list.draw()
-        self.wall_list.draw()
+        self.scene.draw()
         self.camera_gui.use()
         arcade.draw_lrbt_rectangle_filled(0, self.width, 0, 40, arcade.color.BISTRE)
     def on_key_press(self, key, modifiers):
