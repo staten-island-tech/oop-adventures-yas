@@ -7,6 +7,7 @@ WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1280
 WINDOW_TITLE = "The Unbinding of Isaac"
 VIEWPORT_MARGIN = 600
+GRAVITY = 1
 
 HORIZONTAL_BOUNDARY = 300
 VERTICAL_BOUNDARY = 300
@@ -32,41 +33,18 @@ class Interface(arcade.View):
         self.right_pressed = False
         self.up_pressed = False
         self.down_pressed = False
+        self.tile_map = None
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
     def setup(self):
-
-        layer_options = {
-            "Platforms": {
-                "use_spatial_hash": True
-            }
-        }
-
-        # Load our TileMap
-        self.tile_map = arcade.load_tilemap(
-            "tilemap",
-            scaling=TILE_SCALING,
-            layer_options=layer_options,
-        )
-
-        self.scene = arcade.Scene.from_tilemap(self.tile_map)
-
-        self.player_texture = arcade.load_texture(
-            ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
-        )
-
-        self.scene = arcade.Scene.from_tilemap(self.tile_map)
-
-        self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite, walls=self.scene["object layer"], gravity_constant=GRAVITY
-        )
-
         self.player_list = arcade.SpriteList()
         self.player_sprite = arcade.Sprite("sprite.png", SPRITE_SCALING)
         self.player_list.append(self.player_sprite)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
+            self.player_sprite, walls=self.scene["Object_Layer"], gravity_constant=GRAVITY
+        )
         self.background_color = arcade.color.BISTRE
     def on_draw(self):
         self.clear()
