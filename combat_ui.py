@@ -4,7 +4,7 @@ import monster
 import hero
 from PIL import Image, ImageTk
 class combat_ui():
-    def __init__(self):
+    def __init__(self,):
         self.create_combat_ui()
     def create_combat_ui(self):
         combat=tk.Tk()
