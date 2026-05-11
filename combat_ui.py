@@ -2,6 +2,7 @@ import random
 import tkinter as tk
 import monster
 import hero
+from PIL import Image, ImageTk
 
 def combat_ui():
     combat=tk.Tk()
@@ -9,13 +10,26 @@ def combat_ui():
     combat.geometry("1920x1280")
     combat.configure(bg = "red")
 
-    bg = tk.PhotoImage(file="image.png")
-    bg_label = tk.Label(combat, image=bg)
-    bg_label.place(relheight=1, relwidth=1)
+    # load background and sprite as RGBA so alpha is preserved
+    bg = Image.open("image.png").convert("RGBA")
+    sprite = Image.open("combat_sprite.png").convert("RGBA")
 
-    player = tk.PhotoImage(file="combat_sprite.png")
-    player_label = tk.Label(combat, image=player)
-    player_label.place(relx=0.2, rely=0.45, anchor=tk.CENTER, width=500, height=500)
+    # optional: resize sprite to desired size
+    sprite = sprite.resize((500, 500), Image.LANCZOS)
+
+    # compute paste position (center at relx=0.2, rely=0.45)
+    bg_w, bg_h = bg.size
+    x = int(bg_w * 0.2) - sprite.width // 2
+    y = int(bg_h * 0.45) - sprite.height // 2
+
+    # paste sprite onto background using its alpha channel as the mask
+    bg.paste(sprite, (x, y), sprite)
+
+    # convert the composed image for Tkinter
+    tk_img = ImageTk.PhotoImage(bg)
+    bg_label = tk.Label(combat, image=tk_img)
+    bg_label.image = tk_img  # keep reference to avoid GC
+    bg_label.place(relheight=1, relwidth=1)
 
     combat.mainloop()
 combat_ui()
