@@ -1,6 +1,7 @@
 import arcade
 import math
 import subprocess
+import combat_ui
 
 
 class Enemy(arcade.Sprite):
@@ -27,14 +28,14 @@ class Enemy(arcade.Sprite):
                 print(f"enemy '{enemy.enemy_type}' is near, distance: {math.ceil(distance)}")
 
                 if enemy.enemy_type == "slime":
-                    subprocess.run(["python", "slime_battle.py"])
+                    subprocess.run([combat_ui.create_combat_ui(), combat_ui.determine_enemy("slime")])
                     return
                 if enemy.enemy_type == "skeleton":
-                    subprocess.run(["python", "skeleton_battle.py"])
+                    subprocess.run([combat_ui.create_combat_ui(), combat_ui.determine_enemy("skeleton")])
                     return
                 if enemy.enemy_type == "witch":
-                    subprocess.run(["python", "witch_battle.py"])
+                    subprocess.run([combat_ui.create_combat_ui(), combat_ui.determine_enemy("witch")])
                     return
                 if enemy.enemy_type == "goblin":
-                    subprocess.run(["python", "goblin_battle.py"])
+                    subprocess.run([combat_ui.create_combat_ui(), combat_ui.determine_enemy("goblin")])
                     return

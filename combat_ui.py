@@ -4,7 +4,7 @@ import monster
 import hero
 from PIL import Image, ImageTk
 class combat_ui():
-    def __init__(self,):
+    def __init__(self):
         self.create_combat_ui()
     def create_combat_ui(self):
         combat=tk.Tk()
@@ -15,6 +15,7 @@ class combat_ui():
         # load background and sprite as RGBA so alpha is preserved
         bg = Image.open("image.png").convert("RGBA")
         sprite = Image.open("combat_sprite.png").convert("RGBA")
+        
 
         # optional: resize sprite to desired size
         sprite = sprite.resize((500, 500), Image.LANCZOS)
@@ -33,4 +34,17 @@ class combat_ui():
         bg_label.image = tk_img 
         bg_label.place(relheight=1, relwidth=1)
 
-        combat.mainloop()
+        return combat
+    def determine_enemy(self, enemy):
+        global enemy_sprite
+        if enemy == "slime":
+            enemy_sprite = Image.open("slime_sprite.png").convert("RGBA")
+        if enemy == "skeleton":
+            enemy_sprite = Image.open("skeleton_sprite.png").convert("RGBA")
+        if enemy == "witch":
+            enemy_sprite = Image.open("witch_sprite.png").convert("RGBA")
+        if enemy == "goblin":
+            enemy_sprite = Image.open("goblin_sprite.png").convert("RGBA")
+
+combat_ui = combat_ui()
+combat_ui.create_combat_ui()
