@@ -1,8 +1,8 @@
 import random
 import arcade
 
-SPRITE_SCALING = 5
-WALL_SCALING = 5
+SPRITE_SCALING = 4
+WALL_SCALING = 4
 WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1280
 WINDOW_TITLE = "The Unbinding of Isaac"
@@ -44,33 +44,36 @@ class Interface(arcade.View):
             }
         }
 
-        # Load our TileMap
+
         self.tile_map = arcade.load_tilemap(
             "test_map.json",
             scaling=SPRITE_SCALING,
             layer_options=layer_options,
         )
 
-        # Create our Scene Based on the TileMap
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
+
 
 
         self.player_list = arcade.SpriteList()
         self.player_sprite = arcade.Sprite("game_sprite.png", SPRITE_SCALING)
         self.player_list.append(self.player_sprite)
-        self.player_sprite.center_x = 280
-        self.player_sprite.center_y = 280
-        self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite, walls=self.scene["Object_Layer"], gravity_constant=GRAVITY
+
+        self.physics_engine = arcade.PhysicsEngineSimple(
+            self.player_sprite, walls=self.scene["Object_Layer"]
         )
+        
+
+        self.player_sprite.center_x = 800
+        self.player_sprite.center_y = 800
+        
         self.background_color = arcade.color.BISTRE
     def on_draw(self):
         self.clear()
         self.camera_sprites.use()
-        self.player_list.draw()
         self.scene.draw()
+        self.player_list.draw()
         self.camera_gui.use()
-        arcade.draw_lrbt_rectangle_filled(0, self.width, 0, 40, arcade.color.BISTRE)
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
             self.up_pressed = True
@@ -115,11 +118,13 @@ class Interface(arcade.View):
         self.camera_gui.match_window(position=True)
 def main():
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+
+    window.ctx.enable(window.ctx.BLEND)
+    
     game = Interface()
     game.setup()
     window.show_view(game)
     arcade.run()
-
 
 if __name__ == "__main__":
     main()
