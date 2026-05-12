@@ -14,6 +14,6 @@ class monster():
         self.hp = self.level * 2
 
 
-    
+
 
 
