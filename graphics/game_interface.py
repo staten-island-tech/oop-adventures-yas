@@ -58,8 +58,8 @@ class Interface(arcade.View):
         self.player_list = arcade.SpriteList()
         self.player_sprite = arcade.Sprite("game_sprite.png", SPRITE_SCALING)
         self.player_list.append(self.player_sprite)
-        self.player_sprite.center_x = 100
-        self.player_sprite.center_y = 100
+        self.player_sprite.center_x = 280
+        self.player_sprite.center_y = 280
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player_sprite, walls=self.scene["Object_Layer"], gravity_constant=GRAVITY
         )
