@@ -27,7 +27,7 @@ class ShopInterface(arcade.View):
         close_button.on_click = self.on_close
         v_box.add(close_button)
 
-        self.ui.add(v_box, anchor_x="center", anchor_y="center")
+        self.ui.add(v_box)
 
     def on_draw(self):
         self.clear()
@@ -62,8 +62,8 @@ class ShopInterface(arcade.View):
             print("not enough gold")
 
     def on_close(self, event):
-        arcade.close_window()
+        arcade.show_view(game)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
-            arcade.close_window()
+            arcade.show_view(game)
