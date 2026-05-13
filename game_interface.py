@@ -1,5 +1,7 @@
 import random
 import arcade
+from ShopInterface import ShopInterface
+from hero import hero
 
 SPRITE_SCALING = 4
 WALL_SCALING = 4
@@ -36,6 +38,8 @@ class Interface(arcade.View):
         self.tile_map = None
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
+        self.player_hero = hero(money=500, hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5)
+    
     def setup(self):
 
         layer_options = {
@@ -68,6 +72,9 @@ class Interface(arcade.View):
         self.player_sprite.center_y = 800
         
         self.background_color = arcade.color.BISTRE
+
+        pass
+
     def on_draw(self):
         self.clear()
         self.camera_sprites.use()
@@ -83,6 +90,9 @@ class Interface(arcade.View):
             self.left_pressed = True
         elif key == arcade.key.RIGHT:
             self.right_pressed = True
+        if key == arcade.key.S:  # Press S to open shop
+            shop = ShopInterface(self.player_hero)
+            self.window.show_view(shop)
     def on_key_release(self, key, modifiers):
         if key == arcade.key.UP:
             self.up_pressed = False
