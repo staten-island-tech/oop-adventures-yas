@@ -24,6 +24,15 @@ class hero():
         if monster.hp == 0:
             print(f"You defeated {monster.species}!")
 
+    def weapon_attack(self, monster, weapon):
+        weapon=5
+        monster.hp -= (1+(weapon/100)) + (self.strength * 2)
+        monster.hp = math.ceil(monster.hp)
+        if monster.hp < 0:
+            monster.hp = 0
+        if monster.hp == 0:
+            print(f"You defeated {monster.species}!")
+
     def heal(self,health,inventory):
         for i in self.inventory:
             if "health_potion" in self.inventory[i]:
