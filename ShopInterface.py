@@ -3,10 +3,11 @@ import arcade.gui
 from hero import hero
 
 class ShopInterface(arcade.View):
-    def __init__(self, player_hero: hero):
+    def __init__(self, player_hero: hero, game_view):
         super().__init__()
         self.background_color = arcade.color.BROWN
         self.player_hero = player_hero
+        self.game_view = game_view
         self.ui = arcade.gui.UIManager()
         self.ui.enable()
 
@@ -27,7 +28,10 @@ class ShopInterface(arcade.View):
         close_button.on_click = self.on_close
         v_box.add(close_button)
 
-        self.ui.add(v_box)
+        # Position the box in the center
+        anchor_box = arcade.gui.UIAnchorLayout()
+        anchor_box.add(child=v_box, anchor_x="center_x", anchor_y="center_y")
+        self.ui.add(anchor_box)
 
     def on_draw(self):
         self.clear()
@@ -41,6 +45,7 @@ class ShopInterface(arcade.View):
             self.player_hero.inventory.append("sword")
             self.player_hero.strength += 5
             print("bought sword")
+            print(self.player_hero.inventory)
         else:
             print("not enough gold")
 
@@ -50,6 +55,7 @@ class ShopInterface(arcade.View):
             self.player_hero.inventory.append("shield")
             self.player_hero.armor += 10
             print("bought shield!")
+            print(self.player_hero.inventory)
         else:
             print("not enough gold")
 
@@ -58,12 +64,13 @@ class ShopInterface(arcade.View):
             self.player_hero.money -= 50
             self.player_hero.inventory.append("health_potion")
             print("bought health potion")
+            print(self.player_hero.inventory)
         else:
             print("not enough gold")
 
     def on_close(self, event):
-        arcade.show_view(game)
+        self.window.show_view(self.game_view)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.ESCAPE:
-            arcade.show_view(game)
+            self.window.show_view(self.game_view)

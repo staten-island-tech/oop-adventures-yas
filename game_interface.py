@@ -90,8 +90,8 @@ class Interface(arcade.View):
             self.left_pressed = True
         elif key == arcade.key.RIGHT:
             self.right_pressed = True
-        if key == arcade.key.S:  # Press S to open shop
-            shop = ShopInterface(self.player_hero)
+        elif key == arcade.key.S:
+            shop = ShopInterface(self.player_hero, self)
             self.window.show_view(shop)
     def on_key_release(self, key, modifiers):
         if key == arcade.key.UP:
