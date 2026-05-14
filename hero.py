@@ -22,7 +22,7 @@ class hero():
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
-            print(f"You defeated {monster.species}!")
+            monster.dead = True
 
     def weapon_attack(self, monster, weapon):
         weapon=5
@@ -31,7 +31,7 @@ class hero():
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
-            print(f"You defeated {monster.species}!")
+            monster.dead = True
 
     def heal(self,health,inventory):
         for i in self.inventory:
