@@ -93,6 +93,8 @@ class Interface(arcade.View):
         elif key == arcade.key.S:
             shop = ShopInterface(self.player_hero, self)
             self.window.show_view(shop)
+        elif key == arcade.key.F11:
+            self.window.set_fullscreen(not self.window.fullscreen)
     def on_key_release(self, key, modifiers):
         if key == arcade.key.UP:
             self.up_pressed = False
@@ -127,7 +129,7 @@ class Interface(arcade.View):
         self.camera_sprites.match_window()
         self.camera_gui.match_window(position=True)
 def main():
-    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, fullscreen=True)
 
     window.ctx.enable(window.ctx.BLEND)
     
