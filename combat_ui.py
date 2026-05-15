@@ -9,6 +9,7 @@ import time
 
 def determine_enemy(enemy):
     def create_combat_ui(enemy_sprite):
+        enemy_max_hp = enemy.hp
         combat=tk.Tk()
         combat.title("Battle Started!!")
         combat.geometry("1920x1280")
@@ -40,6 +41,17 @@ def determine_enemy(enemy):
         bg_label.place(relheight=1, relwidth=1)
 
         def buttons():
+            def healthbar(enemy_max_hp):
+                enemy_hp = enemy.hp
+                health_percentage = enemy_hp / enemy_max_hp
+                return health_percentage
+            healthbarbg = tk.Label (combat, bg="gray")
+            healthbarbg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300, height=50)
+            healthbarfg = tk.Label(combat, bg="red")
+            healthbarfg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300 * healthbar(enemy_max_hp), height=50)
+
+
+            healthbar(enemy_max_hp)
             def attack_window():
                 attackb.destroy()
                 inventory.destroy()
@@ -49,6 +61,7 @@ def determine_enemy(enemy):
                     if enemy.dead == True:
                         defeat = tk.Label(combat, text=f"You defeated the {enemy.species}!!", font=("Arial", 50), bg="purple")
                         defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+                        healthbarfg.destroy()
                         combat.update_idletasks()
                         combat.after(2000, combat.destroy)
                     else:
@@ -65,9 +78,7 @@ def determine_enemy(enemy):
             inventory.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
             run = tk.Button(combat, text="Run", font=("Arial", 75), command=lambda: print("Run"), bg="red")
             run.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-            def healthbar(enemy_hp, enemy_max_hp):
-                enemy_hp = enemy.hp
-                enemy_max_hp = enemy.hp
+
 
         buttons()
         combat.mainloop()
