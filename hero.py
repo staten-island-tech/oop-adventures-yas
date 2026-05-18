@@ -17,12 +17,14 @@ class hero():
         self.armor = armor
 
     def attack(self, monster, strength,):
-        monster.hp -=1*(1+(strength/100))
-        monster.hp = math.ceil(monster.hp)
+        dmg =1*(1+(strength/100))
+        dmg = math.ceil(dmg)
+        monster.hp -= dmg
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
             monster.dead = True
+        return dmg
 
     def weapon_attack(self, monster, weapon):
         weapon=5
