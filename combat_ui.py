@@ -78,8 +78,8 @@ def determine_enemy(enemy):
                     dmg = d.attack(enemy, d.strength)
                     fdmg = tk.Label (combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
                     fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
-                    determine_dead()
-                def determine_dead():
+                    determine_dead(fdmg)
+                def determine_dead(fdmg):
                     if enemy.dead == True:
                         defeat = tk.Label(combat, text=f"You defeated the {enemy.species}!!", font=("Arial", 50), bg="purple")
                         defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
@@ -87,9 +87,8 @@ def determine_enemy(enemy):
                         combat.update_idletasks()
                         combat.after(2000, combat.destroy)
                     else:
-                        strike.destroy()
-                        slash.destroy()
-                        buttons()
+                        combat.update_idletasks()
+                        combat.after(1000, fdmg.destroy, strike.destroy(), slash.destroy(), buttons())
                 strike = tk.Button(combat, text="Basic Strike!!", font=("Arial", 60), command=hero_strike)
                 strike.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
                 slash = tk.Button(combat, text="Weapon Attack!!", font=("Arial", 45), command=lambda: d.weapon_attack(enemy, d.strength, 0))

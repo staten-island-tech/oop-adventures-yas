@@ -1,6 +1,6 @@
 import random
 import monster
-import math
+
 class hero():
     def __init__(self,money,hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,stat_points,armor):
         self.money = money
@@ -18,7 +18,7 @@ class hero():
 
     def attack(self, monster, strength,):
         dmg =1*(1+(strength/100))
-        dmg = math.ceil(dmg)
+        dmg = round(dmg)
         monster.hp -= dmg
         if monster.hp < 0:
             monster.hp = 0
@@ -29,7 +29,7 @@ class hero():
     def weapon_attack(self, monster, weapon):
         weapon=5
         monster.hp -= (1+(weapon/100)) + (self.strength * 2)
-        monster.hp = math.ceil(monster.hp)
+        monster.hp = round(monster.hp)
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
