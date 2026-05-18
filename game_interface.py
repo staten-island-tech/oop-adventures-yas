@@ -2,6 +2,8 @@ import random
 import arcade
 from ShopInterface import ShopInterface
 from hero import hero
+from ShopInterface import ShopInterface
+from spell import SpellShopInterface
 
 SPRITE_SCALING = 4
 WALL_SCALING = 4
@@ -95,6 +97,9 @@ class Interface(arcade.View):
             self.window.show_view(shop)
         elif key == arcade.key.F11:
             self.window.set_fullscreen(not self.window.fullscreen)
+        elif key == arcade.key.O:
+            spell_shop = SpellShopInterface(self.player_hero, self)
+            self.window.show_view(spell_shop)
     def on_key_release(self, key, modifiers):
         if key == arcade.key.UP:
             self.up_pressed = False
