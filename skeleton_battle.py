@@ -14,5 +14,4 @@ class skeleton(monster):
     def strike(self):
         hurt = ((self.attack * 1.5)+self.weapon_dmg)-"player armor"
         "player health - hurt"       
-    def take_damage(self, damage):
-        self.hp -= damage - self.armor
+

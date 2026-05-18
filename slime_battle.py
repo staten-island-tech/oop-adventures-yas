@@ -10,11 +10,14 @@ class slime(monster):
     def strike(self):
         hurt = (self.attack * 1.5)
         d.health -= hurt
-        math.ceil(d.health)
+        round(d.health)
         self.dot += 2
         if self.dot > 10:
             self.dot = 10
         d.health -= self.dot
+        edmg = round(hurt + self.dot)
+        return edmg
+        
 
 
 

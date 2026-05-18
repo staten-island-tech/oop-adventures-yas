@@ -42,14 +42,7 @@ def determine_enemy(enemy):
         bg_label = tk.Label(combat, image=tk_img)
         bg_label.image = tk_img 
         bg_label.place(relheight=1, relwidth=1)
-        def ene_turn():
-            enemy.strike()
-            if d.health <= 0:
-                defeat = tk.Label(combat, text=f"You were defeated by the {enemy.species}!!", font=("Arial", 50), bg="purple")
-                defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
-                combat.update_idletasks()
-                combat.after(2000, combat.destroy)
-                turn = True
+
         def buttons():
             def healthbar(max_hp):
                 hp = d.health
@@ -88,7 +81,9 @@ def determine_enemy(enemy):
                         combat.after(2000, combat.destroy)
                     else:
                         combat.update_idletasks()
-                        combat.after(1000, fdmg.destroy, strike.destroy(), slash.destroy(), buttons())
+                        combat.after(1000, fdmg.destroy)
+                        combat.after(1000, strike.destroy)
+                        combat.after(1000, slash.destroy)
                 strike = tk.Button(combat, text="Basic Strike!!", font=("Arial", 60), command=hero_strike)
                 strike.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
                 slash = tk.Button(combat, text="Weapon Attack!!", font=("Arial", 45), command=lambda: d.weapon_attack(enemy, d.strength, 0))
@@ -99,12 +94,26 @@ def determine_enemy(enemy):
             inventory.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
             run = tk.Button(combat, text="Run", font=("Arial", 75), command=lambda: print("Run"), bg="red")
             run.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-
+        def ene_turn():
+            edmg = enemy.strike()
+            endmg = tk.Label (combat, text=f"you took {edmg} damage!!", font=("Arial", 30), bg="purple")
+            endmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+            if d.health <= 0:
+                defeat = tk.Label(combat, text=f"You were defeated by the {enemy.species}!!", font=("Arial", 50), bg="purple")
+                defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+                combat.update_idletasks()
+                combat.after(2000, combat.destroy)
+                turn = True
+            else: 
+                combat.update_idletasks()
+                combat.after(1000, endmg.destroy)
+                turn = True
         if turn == True:
             buttons()
             turn = False
         else: 
             ene_turn()
+            buttons()
         combat.mainloop()
             
     if enemy.species == "slime":
