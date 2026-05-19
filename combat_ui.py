@@ -5,14 +5,15 @@ import slime_battle
 import goblin_battle
 from hero import hero
 from PIL import Image, ImageTk
-import time
+
 
 def determine_enemy(enemy):
-    
+
     def create_combat_ui(enemy_sprite):
         turn = True
         enemy_max_hp = enemy.hp
         max_hp = d.health
+        "set hp maxs for hp bars and create turn within combat ui"
         combat=tk.Tk()
         combat.title("Battle Started!!")
         combat.geometry("1920x1280")
@@ -42,31 +43,24 @@ def determine_enemy(enemy):
         bg_label = tk.Label(combat, image=tk_img)
         bg_label.image = tk_img 
         bg_label.place(relheight=1, relwidth=1)
-
+        "create ui with sprites"
+        
         def buttons():
-            def healthbar(max_hp):
-                hp = d.health
-                health_percentagef = hp / max_hp
-                return health_percentagef
-            def ene_healthbar(enemy_max_hp):
-                enemy_hp = enemy.hp
-                health_percentage = enemy_hp / enemy_max_hp
-                return health_percentage
-            healthbarbg = tk.Label (combat, bg="gray")
-            healthbarbg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300, height=50)
-            healthbarfg = tk.Label(combat, bg="red")
-            healthbarfg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300 * ene_healthbar(enemy_max_hp), height=50)
-            healthbarbgf = tk.Label (combat, bg="gray")
-            healthbarbgf.place(relx=0.2, rely=0.1, anchor=tk.CENTER, width=300, height=50)
-            healthbarfgf = tk.Label(combat, bg="red")
-            healthbarfgf.place(relx=0.2, rely=0.1, anchor=tk.CENTER, width=300 * ene_healthbar(enemy_max_hp), height=50)
+            def run_window():
+                attackb.destroy()
+                inventory.destroy()
+                run.destroy()
+                runw=tk.Label(combat, text="Theres no running you pu-coward", font=("Arial", 50), bg="purple")
+                runw.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+                combat.update_idletasks()
+                combat.after(1000, ene_turn)
+                combat.after(1000, runw.destroy)
 
-            healthbar(max_hp)
-            ene_healthbar(enemy_max_hp)
             def attack_window():
                 attackb.destroy()
                 inventory.destroy()
                 run.destroy()
+                
                 def hero_strike():
                     dmg = d.attack(enemy, d.strength)
                     fdmg = tk.Label (combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
@@ -84,38 +78,77 @@ def determine_enemy(enemy):
                         combat.after(1000, fdmg.destroy)
                         combat.after(1000, strike.destroy)
                         combat.after(1000, slash.destroy)
+                        combat.after(1000, ene_turn)
                 strike = tk.Button(combat, text="Basic Strike!!", font=("Arial", 60), command=hero_strike)
                 strike.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
                 slash = tk.Button(combat, text="Weapon Attack!!", font=("Arial", 45), command=lambda: d.weapon_attack(enemy, d.strength, 0))
                 slash.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+                combat.update_idletasks()
             attackb = tk.Button(combat, text="Attack", font=("Arial", 75), command=attack_window, bg="red")
             attackb.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
             inventory = tk.Button(combat, text="Inventory", font=("Arial", 75), command=lambda: print("Inventory"), bg="red")
             inventory.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-            run = tk.Button(combat, text="Run", font=("Arial", 75), command=lambda: print("Run"), bg="red")
+            run = tk.Button(combat, text="Run", font=("Arial", 75), command=lambda: run_window(), bg="red")
             run.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+            "creates the three buttons"    
+            
         def ene_turn():
-            edmg = enemy.strike()
-            endmg = tk.Label (combat, text=f"you took {edmg} damage!!", font=("Arial", 30), bg="purple")
-            endmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+            edmg, psn = enemy.strike(d)
+            endmg = tk.Label (combat, text=f"you took {edmg} damage!! ({psn} poison damge)",wraplength= 250,  font=("Arial", 30), bg="purple")
+
+            endmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=300)
+            healthbars()
             if d.health <= 0:
                 defeat = tk.Label(combat, text=f"You were defeated by the {enemy.species}!!", font=("Arial", 50), bg="purple")
                 defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
                 combat.update_idletasks()
                 combat.after(2000, combat.destroy)
-                turn = True
             else: 
                 combat.update_idletasks()
                 combat.after(1000, endmg.destroy)
                 turn = True
-        if turn == True:
-            buttons()
-            turn = False
-        else: 
-            ene_turn()
-            buttons()
-        combat.mainloop()
+                
+                combat_loop(turn)
+                
+        def healthbars():
+            global healthbarbg
+            global healthbarfg
+            global healthbarbgf
+            global healthbarfgf
+            def healthbar(max_hp):
+                hp = d.health
+                health_percentagef = hp / max_hp
+                return health_percentagef
+                "determines percent for hp bar printing"
+            def ene_healthbar(enemy_max_hp):
+                enemy_hp = enemy.hp
+                health_percentage = enemy_hp / enemy_max_hp
+                return health_percentage
+                "determines percent for hp bar printing"
+            healthbarbg = tk.Label (combat, bg="gray")
+            healthbarbg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300, height=50)
+            healthbarfg = tk.Label(combat, bg="red")
+            healthbarfg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300 * ene_healthbar(enemy_max_hp), height=50)
+            healthbarbgf = tk.Label (combat, bg="gray")
+            healthbarbgf.place(relx=0.2, rely=0.1, anchor=tk.CENTER, width=300, height=50)
+            healthbarfgf = tk.Label(combat, bg="red")
+            healthbarfgf.place(relx=0.2, rely=0.1, anchor=tk.CENTER, width=300 * ene_healthbar(enemy_max_hp), height=50) 
+            healthbar(max_hp)
+            ene_healthbar(enemy_max_hp)
+            "places both health bars"
+
             
+        
+        def combat_loop(turn):
+            if turn == True:
+                healthbars()
+                buttons()
+                turn = False
+            else: 
+                ene_turn()
+                buttons()
+        combat_loop(turn)
+        combat.mainloop()
     if enemy.species == "slime":
         create_combat_ui("slime")
     if enemy.species == "skeleton":
@@ -124,5 +157,7 @@ def determine_enemy(enemy):
         create_combat_ui("witch")
     if enemy.species == "goblin":
         create_combat_ui("goblin")
+            
+    
 d = hero(100, 100, 100, 10, None, 1, 0, 10, 0, 0, None)
 determine_enemy(slime_battle.slime(3, 20, 1, False, 0))
