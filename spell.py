@@ -30,13 +30,25 @@ class SpellShopInterface(arcade.View):
             {"name": "lightning", "damage": 40, "level_req": 4},
         ]
 
-        for spell in self.spells:
-            level_req = spell["level_req"]
-            damage = spell["damage"]
-            can_equip = self.player_hero.level >= level_req
-            spell_button = arcade.gui.UIFlatButton(text=f"{spell['name']} - dmg: {damage} (req: Lvl {level_req})", width=400, height=70)
-            spell_button.on_click = lambda e, s=spell: self.on_equip_spell(s["name"], s["level_req"])
-            v_box.add(spell_button)
+        can_equip = self.player_hero.level >= self.spells[0]["level_req"]
+        spell_button1 = arcade.gui.UIFlatButton(text=f"{self.spells[0]['name']} - dmg: {self.spells[0]['damage']} (req: Lvl {self.spells[0]['level_req']})", width=400, height=70)
+        spell_button1.on_click = self.button1_click
+        v_box.add(spell_button1)
+
+        can_equip = self.player_hero.level >= self.spells[1]["level_req"]
+        spell_button2 = arcade.gui.UIFlatButton(text=f"{self.spells[1]['name']} - dmg: {self.spells[1]['damage']} (req: Lvl {self.spells[1]['level_req']})", width=400, height=70)
+        spell_button2.on_click = self.button2_click
+        v_box.add(spell_button2)
+
+        can_equip = self.player_hero.level >= self.spells[2]["level_req"]
+        spell_button3 = arcade.gui.UIFlatButton(text=f"{self.spells[2]['name']} - dmg: {self.spells[2]['damage']} (req: Lvl {self.spells[2]['level_req']})", width=400, height=70)
+        spell_button3.on_click = self.button3_click
+        v_box.add(spell_button3)
+
+        can_equip = self.player_hero.level >= self.spells[3]["level_req"]
+        spell_button4 = arcade.gui.UIFlatButton(text=f"{self.spells[3]['name']} - dmg: {self.spells[3]['damage']} (req: Lvl {self.spells[3]['level_req']})", width=400, height=70)
+        spell_button4.on_click = self.button4_click
+        v_box.add(spell_button4)
 
         close_button = arcade.gui.UIFlatButton(text="close (ESC)", width=400, height=80)
         close_button.on_click = self.on_close
@@ -49,6 +61,18 @@ class SpellShopInterface(arcade.View):
     def on_draw(self):
         self.clear()
         self.ui.draw()
+    
+    def button1_click(self, event):
+        self.on_equip_spell(self.spells[0]["name"], self.spells[0]["level_req"])
+
+    def button2_click(self, event):
+        self.on_equip_spell(self.spells[1]["name"], self.spells[1]["level_req"])
+
+    def button3_click(self, event):
+        self.on_equip_spell(self.spells[2]["name"], self.spells[2]["level_req"])
+
+    def button4_click(self, event):
+        self.on_equip_spell(self.spells[3]["name"], self.spells[3]["level_req"])
 
     def on_equip_spell(self, spell_name, level_req):
         if self.player_hero.level >= level_req:
