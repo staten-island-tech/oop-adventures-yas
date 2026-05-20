@@ -4,7 +4,10 @@ from ShopInterface import ShopInterface
 from hero import hero
 from ShopInterface import ShopInterface
 from spell import SpellShopInterface
+from arcade.future.light import Light, LightLayer
 
+
+AMBIENT_COLOR = (20, 20, 20)
 SPRITE_SCALING = 4
 WALL_SCALING = 4
 WINDOW_WIDTH = 1920
@@ -13,18 +16,8 @@ WINDOW_TITLE = "The Unbinding of Isaac"
 VIEWPORT_MARGIN = 600
 GRAVITY = 0
 
-HORIZONTAL_BOUNDARY = 200
-VERTICAL_BOUNDARY = 100
-
-CAMERA_BOUNDARY = arcade.LRBT(
-    -HORIZONTAL_BOUNDARY,
-      HORIZONTAL_BOUNDARY,
-      -VERTICAL_BOUNDARY,
-      VERTICAL_BOUNDARY,
-)
 
 CAMERA_SPEED = 0.1
-
 PLAYER_MOVEMENT_SPEED = 3
 
 class Interface(arcade.View):
@@ -41,7 +34,7 @@ class Interface(arcade.View):
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
         self.player_hero = hero(money=500, hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5)
-    
+        self.player_light = None
     def setup(self):
 
         layer_options = {
@@ -64,11 +57,14 @@ class Interface(arcade.View):
         self.player_list = arcade.SpriteList()
         self.player_sprite = arcade.Sprite("game_sprite.png", SPRITE_SCALING)
         self.player_list.append(self.player_sprite)
-
+        self.light_layer = LightLayer(WINDOW_WIDTH, WINDOW_HEIGHT)
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player_sprite, walls=self.scene["Object_Layer"]
         )
-        
+        radius = 150
+        mode = 'soft'
+        color = arcade.csscolor.WHITE
+        self.player_light = Light(0, 0, radius, color, mode)
 
         self.player_sprite.center_x = 800
         self.player_sprite.center_y = 800
@@ -79,10 +75,19 @@ class Interface(arcade.View):
 
     def on_draw(self):
         self.clear()
+        
         self.camera_sprites.use()
         self.scene.draw()
         self.player_list.draw()
+        
         self.camera_gui.use()
+        with self.light_layer:
+            self.scene.draw()
+            self.player_list.draw()
+        
+        self.light_layer.draw(ambient_color=AMBIENT_COLOR)
+        arcade.draw_text("Press SPACE to turn lantern on/off.", 10, 10, arcade.color.WHITE, 20)
+
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
             self.up_pressed = True
@@ -100,6 +105,12 @@ class Interface(arcade.View):
         elif key == arcade.key.O:
             spell_shop = SpellShopInterface(self.player_hero, self)
             self.window.show_view(spell_shop)
+        elif key == arcade.key.SPACE:
+            if self.player_light in self.light_layer:
+                self.light_layer.remove(self.player_light)
+            else:
+                self.light_layer.add(self.player_light)
+    
     def on_key_release(self, key, modifiers):
         if key == arcade.key.UP:
             self.up_pressed = False
@@ -120,15 +131,22 @@ class Interface(arcade.View):
             self.player_sprite.change_x = -PLAYER_MOVEMENT_SPEED
         elif self.right_pressed and not self.left_pressed:
             self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
+        self.player_light.position = self.player_sprite.position
         self.physics_engine.update()
         self.scroll_to_player()
     def scroll_to_player(self):
-        new_position = arcade.camera.grips.constrain_boundary_xy(
-            self.camera_sprites.view_data, CAMERA_BOUNDARY, self.player_sprite.position
-        )
-        self.camera_sprites.position = arcade.math.lerp_2d(
-            self.camera_sprites.position, (new_position[0], new_position[1]), CAMERA_SPEED
-        )
+
+        target_x = self.player_sprite.center_x
+        target_y = self.player_sprite.center_y
+        
+        current_x = self.camera_sprites.position[0]
+        current_y = self.camera_sprites.position[1]
+        
+        new_x = arcade.math.lerp(current_x, target_x, CAMERA_SPEED)
+        new_y = arcade.math.lerp(current_y, target_y, CAMERA_SPEED)
+        
+        self.camera_sprites.position = (new_x, new_y)
+
     def on_resize(self, width: int, height: int):
         super().on_resize(width, height)
         self.camera_sprites.match_window()
