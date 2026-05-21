@@ -2,7 +2,6 @@ import random
 import arcade
 from ShopInterface import ShopInterface
 from hero import hero
-from ShopInterface import ShopInterface
 from spell import SpellShopInterface
 from arcade.future.light import Light, LightLayer
 
@@ -75,17 +74,12 @@ class Interface(arcade.View):
 
     def on_draw(self):
         self.clear()
-        
         self.camera_sprites.use()
-        self.scene.draw()
-        self.player_list.draw()
-        
-        self.camera_gui.use()
         with self.light_layer:
             self.scene.draw()
             self.player_list.draw()
-        
         self.light_layer.draw(ambient_color=AMBIENT_COLOR)
+        self.camera_gui.use()
         arcade.draw_text("Press SPACE to turn lantern on/off.", 10, 10, arcade.color.WHITE, 20)
 
     def on_key_press(self, key, modifiers):
