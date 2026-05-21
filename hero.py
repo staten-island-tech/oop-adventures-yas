@@ -2,7 +2,7 @@ import random
 import monster
 
 class hero():
-    def __init__(self,money,hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,stat_points,armor):
+    def __init__(self,money,hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,stat_points,armor, weapon):
         self.money = money
         self.inventory = []
         self.hunger = hunger
@@ -15,6 +15,7 @@ class hero():
         self.xp = xp
         self.stat_points = stat_points
         self.armor = armor
+        self.weapon = weapon
 
     def attack(self, monster, strength,):
         dmg =1*(1+(strength/100))
@@ -27,13 +28,14 @@ class hero():
         return dmg
 
     def weapon_attack(self, monster, weapon):
-        weapon=5
-        monster.hp -= (1+(weapon/100)) + (self.strength * 2)
-        monster.hp = round(monster.hp)
+        dmg = (1+(weapon/100)) + (self.strength * 2)
+        dmg = round(dmg)
+        monster.hp -= dmg
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
             monster.dead = True
+        return dmg
 
     def heal(self,health,inventory):
         for i in self.inventory:
@@ -51,7 +53,5 @@ class hero():
             self.stat_points +=1
         
 
-     
-    
 
-        
+
