@@ -3,8 +3,8 @@ import random
 import tkinter as tk
 
 class witch(monster):
-    def __init__(self, hp, attack, level,mana):
-        super().__init__("witch", hp, attack, level)
+    def __init__(self, hp, attack, level, dead, mana):
+        super().__init__("witch", hp, attack, level, dead)
         self.spells = ["fireball","bind","weaken"]
         self.mana = mana
     def attack(self):
