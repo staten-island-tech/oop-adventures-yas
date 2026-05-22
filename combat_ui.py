@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 import spell 
 
 class combat_UI:
-    def __init__(self, enemy_sprite, combat, attckb, inventory, run, max_hp, enemy_max_hp, fdmg, strike, slash, endmg, enemy, turn, hero, healthbarfgf, healthbarfg, spell_attack, potion_pouch, weapon_pouch, spell_wheel):
+    def __init__(self, enemy_sprite, combat, attckb, inventory, run, max_hp, enemy_max_hp, fdmg, strike, slash, endmg, enemy, turn, hero, healthbarfgf, healthbarfg, spell_attack, potion_pouch, weapon_pouch, spell_wheel, weapon):
         self.enemy_sprite = enemy_sprite  
         self.combat = None  
         self.attckb = None
@@ -29,6 +29,7 @@ class combat_UI:
         self.potion_pouch = None
         self.weapon_pouch = None
         self.spell_wheel = None
+        self.weapon = weapon
     def determine_enemy(self):
         if self.enemy.species == "slime":
             self.create_combat_ui("slime")
@@ -41,7 +42,7 @@ class combat_UI:
     def create_combat_ui(self, enemy_sprite):
         combat=tk.Tk()
         combat.title("Battle Started!!")
-        combat.geometry("1920x1280")
+        combat.geometry("1920x1080")
         combat.configure(bg = "red")
         bg = Image.open("bg.png").convert("RGBA")
         sprite = Image.open("combat_sprite.png").convert("RGBA")
@@ -101,7 +102,7 @@ class combat_UI:
         self.attackb.destroy()
         self.inventory.destroy()
         self.run.destroy()
-        self.weapon_pouch = tk.Button(self.combat, text="Weapons", font=("Arial", 60), command=lambda: print("Weapon Pouch"))
+        self.weapon_pouch = tk.Button(self.combat, text="Weapons", font=("Arial", 60), command=self.weapon_window)
         self.weapon_pouch.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
         self.potion_pouch = tk.Button(self.combat, text="Potions", font=("Arial", 60), command=lambda: print("Potion Pouch"))
         self.potion_pouch.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
@@ -110,7 +111,26 @@ class combat_UI:
         self.combat.update_idletasks()
     def weapon_window(self):
         self.weapon_pouch.destroy()
-        self.
+        self.potion_pouch.destroy()
+        self.spell_wheel.destroy()
+        weapon1 = tk.Button(self.combat, text=self.hero.weapons[0]["name"], font=("Arial", 60), command=self.select_weapon_1)
+        weapon1.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+        weapon2 = tk.Button(self.combat, text=self.hero.weapons[1]["name"], font=("Arial", 60), command=self.select_weapon_2)
+        weapon2.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+    def select_weapon_1(self):
+        selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory[0]['name']}!!", font=("Arial", 50), bg="purple")
+        selected.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+        self.weapon = 0
+        self.combat.update_idletasks()
+        self.combat.after(1000, selected.destroy)
+        self.combat.after(1000, self.buttons)
+    def select_weapon_2(self):
+        selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory[1]['name']}!!", font=("Arial", 50), bg="purple")
+        selected.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+        self.weapon = 1
+        self.combat.update_idletasks()
+        self.combat.after(1000, selected.destroy)
+        self.combat.after(1000, self.buttons)
     def hero_strike(self):
         dmg = self.hero.attack(self.enemy, self.hero.strength)
         self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
@@ -175,7 +195,7 @@ class combat_UI:
             self.ene_turn()
             self.buttons()
     def hero_weapon_attack(self):
-        dmg = self.hero.weapon_attack(self.enemy, self.hero.weapon)
+        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory[self.weapon]["dmg"])
         self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
         self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
         self.healthbare()
@@ -195,9 +215,8 @@ class combat_UI:
     
 
 
-d = hero(100, [{"name":"sword","weapon":10}, {"name":"dagger", "weapon":5}], 100, 100, 10, {"name": "fireball", "damage": 25, "level_req": 1}, 1, 0, 10, 0, 0, None)
-""" def __init__(self,money, inventory, hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,stat_points,armor, weapon): """
+d = hero(100, [{"name":"sword","dmg":10}, {"name":"dagger", "dmg":5}], 100, 100, 10, {"name": "fireball", "damage": 25, "level_req": 1}, 1, 0, 10, 0, 0, None)
 e = slime_battle.slime(30, 10, 1, False, 0)
-a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None)
+a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None, 0)
 a.fight()
  
