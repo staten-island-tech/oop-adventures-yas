@@ -63,24 +63,24 @@ class SpellShopInterface(arcade.View):
         self.ui.draw()
     
     def button1_click(self, event):
-        self.on_equip_spell(self.spells[0]["name"], self.spells[0]["level_req"])
+        self.on_equip_spell(self.spells[0])
 
     def button2_click(self, event):
-        self.on_equip_spell(self.spells[1]["name"], self.spells[1]["level_req"])
+        self.on_equip_spell(self.spells[1])
 
     def button3_click(self, event):
-        self.on_equip_spell(self.spells[2]["name"], self.spells[2]["level_req"])
+        self.on_equip_spell(self.spells[2])
 
     def button4_click(self, event):
-        self.on_equip_spell(self.spells[3]["name"], self.spells[3]["level_req"])
+        self.on_equip_spell(self.spells[3])
 
-    def on_equip_spell(self, spell_name, level_req):
-        if self.player_hero.level >= level_req:
-            self.player_hero.equipped_spell = spell_name
-            self.current_spell_label.text = f"equipped: {spell_name.upper()}"
-            print(f"equipped {spell_name}")
+    def on_equip_spell(self, spell):
+        if self.player_hero.level >= spell["level_req"]:
+            self.player_hero.equipped_spell = spell
+            self.current_spell_label.text = f"equipped: {spell["name"].upper()}"
+            print(f"equipped {spell["name"]}")
         else:
-            print(f"you need level {level_req} to equip {spell_name}")
+            print(f"you need level {spell["level_req"]} to equip {spell["name"]}")
 
     def on_close(self, event):
         self.window.show_view(self.game_view)

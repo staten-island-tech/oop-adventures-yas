@@ -32,7 +32,7 @@ class Interface(arcade.View):
         self.tile_map = None
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
-        self.player_hero = hero(money=500, hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5)
+        self.player_hero = hero(money=500, hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5, weapon=10)
         self.player_light = None
     def setup(self):
 
@@ -157,3 +157,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
