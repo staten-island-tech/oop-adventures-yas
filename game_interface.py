@@ -4,10 +4,11 @@ from ShopInterface import ShopInterface
 from hero import hero
 from spell import SpellShopInterface
 from arcade.future.light import Light, LightLayer
-
+import encounter_sys
+import combat_ui
 
 AMBIENT_COLOR = (20, 20, 20)
-SPRITE_SCALING = 4
+SPRITE_SCALING = 3.5
 WALL_SCALING = 4
 WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1280
@@ -44,8 +45,8 @@ class Interface(arcade.View):
 
 
         self.tile_map = arcade.load_tilemap(
-            "test_map.json",
-            scaling=SPRITE_SCALING,
+            "poop.json",
+            scaling=WALL_SCALING,
             layer_options=layer_options,
         )
 
@@ -56,17 +57,31 @@ class Interface(arcade.View):
         self.player_list = arcade.SpriteList()
         self.player_sprite = arcade.Sprite("game_sprite.png", SPRITE_SCALING)
         self.player_list.append(self.player_sprite)
+
+        # Enemy list (spawn a couple of enemies for example)
+        self.enemy_list = arcade.SpriteList()
+        slime = encounter_sys.EnemySprite(":resources:images/enemies/slimeBlock.png", 0.5, "slime")
+        slime.center_x = 800
+        slime.center_y = 3000
+        self.enemy_list.append(slime)
+
+        gob = encounter_sys.EnemySprite(":resources:images/enemies/followMe.png", 0.6, "goblin")
+        gob.center_x = 300
+        gob.center_y = 2800
+        self.enemy_list.append(gob)
+
         self.light_layer = LightLayer(WINDOW_WIDTH, WINDOW_HEIGHT)
         self.physics_engine = arcade.PhysicsEngineSimple(
-            self.player_sprite, walls=self.scene["Object_Layer"]
+            self.player_sprite, walls=self.scene["object layer (wall physics)"]
         )
-        radius = 150
+        radius = 300
         mode = 'soft'
         color = arcade.csscolor.WHITE
         self.player_light = Light(0, 0, radius, color, mode)
+        self.player_light_radius = radius
 
-        self.player_sprite.center_x = 800
-        self.player_sprite.center_y = 800
+        self.player_sprite.center_x = 150
+        self.player_sprite.center_y = 3000
         
         self.background_color = arcade.color.BISTRE
 
@@ -78,9 +93,13 @@ class Interface(arcade.View):
         with self.light_layer:
             self.scene.draw()
             self.player_list.draw()
+            self.enemy_list.draw()
+        
         self.light_layer.draw(ambient_color=AMBIENT_COLOR)
         self.camera_gui.use()
-        arcade.draw_text("Press SPACE to turn lantern on/off.", 10, 10, arcade.color.WHITE, 20)
+        arcade.draw_text("press SPACE to turn lantern on/off", 10, 10, arcade.color.WHITE, 20)
+        arcade.draw_text("press S to open shop", 10, 40, arcade.color.WHITE, 20)
+        arcade.draw_text("press O to open spells", 10, 70, arcade.color.WHITE, 20)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
@@ -126,6 +145,8 @@ class Interface(arcade.View):
         elif self.right_pressed and not self.left_pressed:
             self.player_sprite.change_x = PLAYER_MOVEMENT_SPEED
         self.player_light.position = self.player_sprite.position
+        encounter_sys.update_enemies(self.player_sprite, self.enemy_list, self.light_layer, self.player_light)
+        self.enemy_list.update()
         self.physics_engine.update()
         self.scroll_to_player()
     def scroll_to_player(self):
@@ -157,3 +178,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    create_combat_ui()
