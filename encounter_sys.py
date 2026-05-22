@@ -24,7 +24,7 @@ class Enemy(arcade.Sprite):
                 (enemy.center_x, enemy.center_y)
             )
 
-            if distance <= 5:
+            if distance <= 100:
                 print(f"enemy '{enemy.enemy_type}' is near, distance: {math.ceil(distance)}")
 
                 if enemy.enemy_type == "slime":
