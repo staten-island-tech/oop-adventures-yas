@@ -28,7 +28,7 @@ class hero():
         return dmg
 
     def weapon_attack(self, monster, weapon):
-        dmg = (1+(weapon/100)) + (self.strength * 2)
+        dmg = (weapon *(self.strength/10))
         dmg = round(dmg)
         monster.hp -= dmg
         if monster.hp < 0:
