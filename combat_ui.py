@@ -192,11 +192,12 @@ class combat_UI:
         if self.hero.equipped_spell["secondary"] == "stun":
             x = 1
             if x == 1:
-                self.turn = True
+                
                 stun = tk.Label(self.combat, text=f"The {self.enemy.species} was stunned and will miss their next turn!!", font=("Arial", 20), bg="purple")
-                stun.place(relx=0.5, rely=0.2, anchor=tk.CENTER, height=100, width=1000)
+                stun.place(relx=0.5, rely=0.2, anchor=tk.CENTER, height=100, width=100)
                 self.combat.update_idletasks()
                 self.combat.after(2000, stun.destroy)
+                print("kill me now")
         if self.hero.equipped_spell["secondary"] == "poison":
             poison = tk.Label(self.combat, text=f"The {self.enemy.species} was poisoned and will take damage every turn!!", font=("Arial", 20), bg="purple")
             poison.place(relx=0.5, rely=0.7, anchor=tk.CENTER, height=100, width=1000)
