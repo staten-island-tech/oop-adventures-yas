@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 import spell 
 
 class combat_UI:
-    def __init__(self, enemy_sprite, combat, attckb, inventory, run, max_hp, enemy_max_hp, fdmg, strike, slash, endmg, enemy, turn, hero, healthbarfgf, healthbarfg, spell_attack, potion_pouch, weapon_pouch, spell_wheel, weapon):
+    def __init__(self, enemy_sprite, combat, attckb, inventory, run, max_hp, enemy_max_hp, fdmg, strike, slash, endmg, enemy, turn, hero, healthbarfgf, healthbarfg, spell_attack, potion_pouch, weapon_pouch, spell_wheel, weapon, active_strength):
         self.enemy_sprite = enemy_sprite  
         self.combat = None  
         self.attckb = None
@@ -30,6 +30,7 @@ class combat_UI:
         self.weapon_pouch = None
         self.spell_wheel = None
         self.weapon = weapon
+        self.active_strength = active_strength
     def determine_enemy(self):
         if self.enemy.species == "slime":
             self.create_combat_ui("slime")
@@ -106,7 +107,7 @@ class combat_UI:
         self.weapon_pouch.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
         self.potion_pouch = tk.Button(self.combat, text="Potions", font=("Arial", 60), command=self.potion_window)
         self.potion_pouch.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        self.spell_wheel = tk.Button(self.combat, text="Spells", font=("Arial", 60), command=lambda: print("Spell Wheel"))
+        self.spell_wheel = tk.Button(self.combat, text="Spells", font=("Arial", 60), command=self.spell_window)
         self.spell_wheel.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
         self.combat.update_idletasks()
     def potion_window(self):
@@ -115,8 +116,24 @@ class combat_UI:
         self.spell_wheel.destroy()
         potion1 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][0]['name']}, Count: {self.hero.inventory['Potions'][0]['count']}" , font=("Arial", 20), command=lambda: [self.health_potion(), potion1.destroy(), potion2.destroy()])
         potion1.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        potion2 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][1]['name']}, Count: {self.hero.inventory['Potions'][1]['count']}" , font=("Arial", 20), command=lambda: print("Health Potion"))
+        potion2 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][1]['name']}, Count: {self.hero.inventory['Potions'][1]['count']}" , font=("Arial", 20), command=lambda: [self.strength_potion(), potion1.destroy(), potion2.destroy()])
         potion2.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+    def strength_potion(self):
+        if self.hero.inventory["Potions"][1]["count"] > 0:
+            strength_potion = tk.Label(self.combat, text=f"You used a {self.hero.inventory['Potions'][1]['name']}!! and gained {self.hero.inventory['Potions'][1]['strong']} strength for this battle", font=("Arial", 20), bg="purple")
+            strength_potion.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+
+            self.active_strength += self.hero.inventory["Potions"][1]["strong"]
+            self.hero.inventory["Potions"][1]["count"] -= 1
+            self.combat.update_idletasks()
+            self.combat.after(1000, strength_potion.destroy)
+            self.combat.after(1000, self.ene_turn)
+        else:
+            no_potions = tk.Label(self.combat, text="You have no strength potions left!!", font=("Arial", 30), bg="purple")
+            no_potions.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+            self.combat.update_idletasks()
+            self.combat.after(1000, no_potions.destroy)
+            self.combat.after(1000, self.buttons)
     def health_potion(self):
         if self.hero.inventory["Potions"][0]["count"] > 0:
             health_potion = tk.Label(self.combat, text=f"You used a {self.hero.inventory['Potions'][0]['name']}!! and healed {self.hero.inventory['Potions'][0]['heal']}", font=("Arial", 30), bg="purple")
@@ -135,6 +152,60 @@ class combat_UI:
             no_potions.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
             self.combat.update_idletasks()
             self.combat.after(1000, no_potions.destroy)
+            self.combat.after(1000, self.buttons)
+    def spell_window(self):
+        self.weapon_pouch.destroy()
+        self.potion_pouch.destroy()
+        self.spell_wheel.destroy()
+        spell1 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][0]['name']}", font=("Arial", 60), command=lambda: [self.select_spell_1(), spell1.destroy(), spell2.destroy()])
+        spell1.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+        spell2 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][1]['name']}", font=("Arial", 60), command=lambda: [self.select_spell_2(), spell1.destroy(), spell2.destroy()])
+        spell2.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+        spell3 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][2]['name']}", font=("Arial", 60), command=lambda: [self.select_spell_3(), spell1.destroy(), spell2.destroy(), spell3.destroy()])
+        spell3.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+    def select_spell_1(self):
+        selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory['Spells'][0]['name']}!!", font=("Arial", 50), bg="purple")
+        selected.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+        self.hero.equipped_spell = self.hero.inventory["Spells"][0]
+        self.combat.update_idletasks()
+        self.combat.after(1000, selected.destroy)
+        self.combat.after(1000, self.buttons)
+    def select_spell_2(self):  
+        selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory['Spells'][1]['name']}!!", font=("Arial", 50), bg="purple")
+        selected.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+        self.hero.equipped_spell = self.hero.inventory["Spells"][1]
+        self.combat.update_idletasks()
+        self.combat.after(1000, selected.destroy)
+        self.combat.after(1000, self.buttons)
+    def select_spell_3(self):
+        selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory['Spells'][2]['name']}!!", font=("Arial", 50), bg="purple")
+        selected.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+        self.hero.equipped_spell = self.hero.inventory["Spells"][2]
+        self.combat.update_idletasks()
+        self.combat.after(1000, selected.destroy)
+        self.combat.after(1000, self.buttons)
+    def spell_attack(self):
+        print(self.hero.mana)
+        dmg = self.hero.spell(self.hero.equipped_spell, self.enemy)
+        self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
+        self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+        if self.hero.equipped_spell["secondary"] == "stun":
+            x = 1
+            if x == 1:
+                self.turn = True
+                stun = tk.Label(self.combat, text=f"The {self.enemy.species} was stunned and will miss their next turn!!", font=("Arial", 20), bg="purple")
+                stun.place(relx=0.5, rely=0.2, anchor=tk.CENTER, height=100, width=1000)
+                self.combat.update_idletasks()
+                self.combat.after(2000, stun.destroy)
+        if self.hero.equipped_spell["secondary"] == "poison":
+            poison = tk.Label(self.combat, text=f"The {self.enemy.species} was poisoned and will take damage every turn!!", font=("Arial", 20), bg="purple")
+            poison.place(relx=0.5, rely=0.7, anchor=tk.CENTER, height=100, width=1000)
+            self.combat.update_idletasks()
+            self.combat.after(1000, poison.destroy)
+        self.hero.mana -= self.hero.equipped_spell["mana_req"]
+        print(self.hero.mana)
+        self.healthbare()
+        self.combat.after(1000,self.determine_dead)
     def weapon_window(self):
         self.weapon_pouch.destroy()
         self.potion_pouch.destroy()
@@ -158,7 +229,7 @@ class combat_UI:
         self.combat.after(1000, selected.destroy)
         self.combat.after(1000, self.buttons)
     def hero_strike(self):
-        dmg = self.hero.attack(self.enemy, self.hero.strength)
+        dmg = self.hero.attack(self.enemy, self.active_strength)
         self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
         self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
         self.healthbare()
@@ -188,7 +259,7 @@ class combat_UI:
             self.combat.after(1000, self.strike.destroy)
             self.combat.after(1000, self.slash.destroy)
             self.combat.after(1000, self.spell_attack.destroy)
-            self.combat.after(1000, self.ene_turn)
+            self.combat.after(1000, self.combat_loop)
     def ene_turn(self):
         if self.enemy.species == "slime":
             edmg, psn = self.enemy.strike(self.hero)
@@ -221,7 +292,7 @@ class combat_UI:
             self.ene_turn()
             self.buttons()
     def hero_weapon_attack(self):
-        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon]["dmg"])
+        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon]["dmg"], self.active_strength)
         self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
         self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
         self.healthbare()
@@ -241,9 +312,9 @@ class combat_UI:
     
 
 
-d = hero(100, [], 100, 100, 10, {"name": "fireball", "damage": 25, "level_req": 1}, 1, 0, 10, 0, 0, None)
-d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50, "count":1}]}
+d = hero(100, [], 100, 100, 10, {"name": "fireball", "damage": 25, "level_req": 1}, 1, 0, 10, 0, 0, None, 10)
+d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50, "count":1}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary":None}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}
 e = slime_battle.slime(30, 10, 1, False, 0)
-a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None, 0)
+a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None, 0, d.strength)
 a.fight()
  

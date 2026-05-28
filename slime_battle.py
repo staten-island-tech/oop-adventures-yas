@@ -8,6 +8,7 @@ class slime(monster):
     def __init__(self, hp, attack, level, dead, dot):
         super().__init__("slime", hp, attack, level, dead)
         self.dot = dot
+
     def strike(self, hero):
         hurt = (self.attack * 1.5)
         hero.health -= hurt

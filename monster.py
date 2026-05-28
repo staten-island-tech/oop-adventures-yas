@@ -7,6 +7,7 @@ class monster():
         self.attack = attack
         self.level = level
         self.dead = False
+        self.stunned = False
     def strike(self):
         hurt = (self.attack * 1.5)-"player armor"
         "player health - hurt"
