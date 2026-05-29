@@ -4,7 +4,7 @@ from ShopInterface import ShopInterface
 from hero import hero
 from spell import SpellShopInterface
 from arcade.future.light import Light, LightLayer
-
+import monster
 
 AMBIENT_COLOR = (20, 20, 20)
 SPRITE_SCALING = 4
@@ -33,6 +33,7 @@ class Interface(arcade.View):
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
         self.player_hero = hero(money=500, inventory=[], hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5, mana=100)
+        self.monster_list = monster
         self.player_light = None
     def setup(self):
 
@@ -44,7 +45,7 @@ class Interface(arcade.View):
 
 
         self.tile_map = arcade.load_tilemap(
-            "test_map.json",
+            "main_map.json",
             scaling=SPRITE_SCALING,
             layer_options=layer_options,
         )
