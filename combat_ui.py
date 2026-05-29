@@ -45,15 +45,15 @@ class combat_UI:
         combat.title("Battle Started!!")
         combat.geometry("1920x1080")
         combat.configure(bg = "red")
-        bg = Image.open("bg.png").convert("RGBA")
+        bg = Image.open("combat.png").convert("RGBA")
         sprite = Image.open("combat_sprite.png").convert("RGBA")
         enemy_sprite = Image.open(f"{enemy_sprite}.png").convert("RGBA")
-        sprite = sprite.resize((500, 500), Image.LANCZOS)
-        enemy_sprite = enemy_sprite.resize((500, 500), Image.LANCZOS)
+        sprite = sprite.resize((350, 350), Image.LANCZOS)
+        enemy_sprite = enemy_sprite.resize((350, 350), Image.LANCZOS)
         if self.enemy.species == "slime":
             enemy_sprite = enemy_sprite.transpose(Image.FLIP_LEFT_RIGHT)
         bg_w, bg_h = bg.size
-        x = int(bg_w * 0.2) - sprite.width // 2
+        x = int(bg_w * 0.2) - sprite.width // 3
         y = int(bg_h * 0.45) - sprite.height // 2
         x1 = int(bg_w * 0.8) - enemy_sprite.width // 2
         y1 = int(bg_h * 0.45) - enemy_sprite.height // 2
@@ -64,13 +64,13 @@ class combat_UI:
         bg_label.image = tk_img 
         bg_label.place(relheight=1, relwidth=1)
         healthbarbg = tk.Label (combat, bg="gray")
-        healthbarbg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300, height=50)
+        healthbarbg.place(relx=0.8, rely=0.2, anchor=tk.CENTER, width=300, height=50)
         healthbarbgf = tk.Label (combat, bg="gray")
-        healthbarbgf.place(relx=0.2, rely=0.1, anchor=tk.CENTER, width=300, height=50)
+        healthbarbgf.place(relx=0.23, rely=0.2, anchor=tk.CENTER, width=300, height=50)
         self.healthbarfg = tk.Label(combat, bg="red")
         self.healthbarfgf = tk.Label(combat, bg="red")
-        self.healthbarfg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300, height=50)
-        self.healthbarfgf.place(relx=0.2, rely=0.1, anchor=tk.CENTER, width=300, height=50)
+        self.healthbarfg.place(relx=0.8, rely=0.2, anchor=tk.CENTER, width=300, height=50)
+        self.healthbarfgf.place(relx=0.23, rely=0.2, anchor=tk.CENTER, width=300, height=50)
         self.combat = combat
     def buttons(self):
         self.attackb = tk.Button(self.combat, text="Attack", font=("Arial", 75), command=self.attack_window, bg="red")
@@ -157,11 +157,11 @@ class combat_UI:
         self.weapon_pouch.destroy()
         self.potion_pouch.destroy()
         self.spell_wheel.destroy()
-        spell1 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][0]['name']}", font=("Arial", 60), command=lambda: [self.select_spell_1(), spell1.destroy(), spell2.destroy()])
+        spell1 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][0]['name']}", font=("Arial", 40), command=lambda: [self.select_spell_1(), spell1.destroy(), spell2.destroy(), spell3.destroy()])
         spell1.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        spell2 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][1]['name']}", font=("Arial", 60), command=lambda: [self.select_spell_2(), spell1.destroy(), spell2.destroy()])
+        spell2 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][1]['name']}", font=("Arial", 40), command=lambda: [self.select_spell_2(), spell1.destroy(), spell2.destroy(), spell3.destroy()])
         spell2.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        spell3 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][2]['name']}", font=("Arial", 60), command=lambda: [self.select_spell_3(), spell1.destroy(), spell2.destroy(), spell3.destroy()])
+        spell3 = tk.Button(self.combat, text=f"equip {self.hero.inventory['Spells'][2]['name']}", font=("Arial", 40), command=lambda: [self.select_spell_3(), spell1.destroy(), spell2.destroy(), spell3.destroy()])
         spell3.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
     def select_spell_1(self):
         selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory['Spells'][0]['name']}!!", font=("Arial", 50), bg="purple")
@@ -184,27 +184,30 @@ class combat_UI:
         self.combat.update_idletasks()
         self.combat.after(1000, selected.destroy)
         self.combat.after(1000, self.buttons)
-    def spell_attack(self):
-        print(self.hero.mana)
-        dmg = self.hero.spell(self.hero.equipped_spell, self.enemy)
-        self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
-        self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+    def hero_spell_attack(self):
+        self.turn = False
+        dmg = self.hero.spell(self.hero.equipped_spell, self.enemy, self.hero.dot) 
+        if self.hero.dot == 0:
+            self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
+            self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+        else:
+            self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!! ({self.hero.dot} poison damage)", font=("Arial", 20), bg="purple")
+            self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
         if self.hero.equipped_spell["secondary"] == "stun":
-            x = 1
+            x = random.randint(1, 2)
             if x == 1:
-                
+                self.turn = True
                 stun = tk.Label(self.combat, text=f"The {self.enemy.species} was stunned and will miss their next turn!!", font=("Arial", 20), bg="purple")
-                stun.place(relx=0.5, rely=0.2, anchor=tk.CENTER, height=100, width=100)
+                stun.place(relx=0.5, rely=0.2, anchor=tk.CENTER, height=100, width=1000)
                 self.combat.update_idletasks()
                 self.combat.after(2000, stun.destroy)
-                print("kill me now")
         if self.hero.equipped_spell["secondary"] == "poison":
             poison = tk.Label(self.combat, text=f"The {self.enemy.species} was poisoned and will take damage every turn!!", font=("Arial", 20), bg="purple")
             poison.place(relx=0.5, rely=0.7, anchor=tk.CENTER, height=100, width=1000)
+            self.hero.dot = 3
             self.combat.update_idletasks()
             self.combat.after(1000, poison.destroy)
         self.hero.mana -= self.hero.equipped_spell["mana_req"]
-        print(self.hero.mana)
         self.healthbare()
         self.combat.after(1000,self.determine_dead)
     def weapon_window(self):
@@ -230,9 +233,13 @@ class combat_UI:
         self.combat.after(1000, selected.destroy)
         self.combat.after(1000, self.buttons)
     def hero_strike(self):
-        dmg = self.hero.attack(self.enemy, self.active_strength)
-        self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
-        self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+        dmg = self.hero.attack(self.enemy, self.active_strength, self.hero.dot) 
+        if self.hero.dot == 0:
+            self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 20), bg="purple")
+            self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+        else:
+            self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!! ({self.hero.dot} poison damage)", font=("Arial", 30), bg="purple")
+            self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
         self.healthbare()
         self.combat.after(1000,self.determine_dead)
     def healthbarf(self):
@@ -240,13 +247,13 @@ class combat_UI:
         hp = self.hero.health
         health_percentagef = hp / self.max_hp
         self.healthbarfgf = tk.Label(self.combat, bg="red")
-        self.healthbarfgf.place(relx=0.2, rely=0.1, anchor=tk.CENTER, width=300 * health_percentagef, height=50)
+        self.healthbarfgf.place(relx=0.23, rely=0.2, anchor=tk.CENTER, width=300 * health_percentagef, height=50)
     def healthbare(self):
         self.healthbarfg.destroy()
         enemy_hp = self.enemy.hp
         health_percentage = enemy_hp / self.enemy_max_hp
         self.healthbarfg = tk.Label(self.combat, bg="red")
-        self.healthbarfg.place(relx=0.8, rely=0.1, anchor=tk.CENTER, width=300 * health_percentage, height=50)
+        self.healthbarfg.place(relx=0.8, rely=0.2, anchor=tk.CENTER, width=300 * health_percentage, height=50)
     def determine_dead(self):
         if self.enemy.dead == True:
             defeat = tk.Label(self.combat, text=f"You defeated the {self.enemy.species}!!", font=("Arial", 50), bg="purple")
@@ -293,15 +300,13 @@ class combat_UI:
             self.ene_turn()
             self.buttons()
     def hero_weapon_attack(self):
-        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon]["dmg"], self.active_strength)
-        self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
-        self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
-        self.healthbare()
-        self.combat.after(1000,self.determine_dead)
-    def hero_spell_attack(self):
-        dmg = self.hero.spell(self.hero.equipped_spell, self.enemy)
-        self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 30), bg="purple")
-        self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon]["dmg"], self.active_strength, self.hero.dot) 
+        if self.hero.dot == 0:
+            self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 20), bg="purple")
+            self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
+        else:
+            self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!! ({self.hero.dot} poison damage)", font=("Arial", 30), bg="purple")
+            self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=300)
         self.healthbare()
         self.combat.after(1000,self.determine_dead)
     def fight(self):
@@ -313,9 +318,8 @@ class combat_UI:
     
 
 
-d = hero(100, [], 100, 100, 10, {"name": "fireball", "damage": 25, "level_req": 1}, 1, 0, 10, 0, 0, None, 10)
-d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50, "count":1}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary":None}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}
+d = hero(100, [], 100, 100, 10, {"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": None}, 1, 0, 10, 0, 0, None, 10, 0)
+d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50, "count":1}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}
 e = slime_battle.slime(30, 10, 1, False, 0)
 a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None, 0, d.strength)
 a.fight()
- 
