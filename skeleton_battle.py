@@ -1,7 +1,7 @@
 import random 
 import monster 
 import tkinter as tk
-
+import hero
 class skeleton(monster):
     def __init__(self, hp, attack, level, dead, armor, weapon_dmg):
         super().__init__("skeleton", hp, attack, level, dead)
@@ -12,6 +12,6 @@ class skeleton(monster):
         self.weapon_dmg = (self.level/10)+x
         return super().generate()
     def strike(self):
-        hurt = ((self.attack * 1.5)+self.weapon_dmg)-"player armor"
-        "player health - hurt"       
+        hurt = ((self.attack * 1.5)+self.weapon_dmg)-hero.armor
+        hero.health -= hurt   
 
