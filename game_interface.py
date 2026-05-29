@@ -83,7 +83,7 @@ class Interface(arcade.View):
         self.camera_gui.use()
         arcade.draw_text("press SPACE to turn lantern on/off.", 10, 10, arcade.color.WHITE, 20)
         arcade.draw_text("press O to open the spell inventory", 10, 40, arcade.color.WHITE, 20)
-        arcade.draw_text("press S to open shop", 10, 70, arcade.color.WHITE, 20)
+        arcade.draw_text("press S to open shop", 10, 70, arcade.color.WHITE, 20) 
         arcade.draw_text("F11 to toggle fullscreen", 10, 100, arcade.color.WHITE, 20)
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
@@ -94,7 +94,7 @@ class Interface(arcade.View):
             self.left_pressed = True
         elif key == arcade.key.RIGHT:
             self.right_pressed = True
-        elif key == arcade.key.S:
+        elif key == arcade.key.S: 
             shop = ShopInterface(self.player_hero, self)
             self.window.show_view(shop)
         elif key == arcade.key.F11:
