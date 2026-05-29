@@ -153,6 +153,25 @@ class combat_UI:
             self.combat.update_idletasks()
             self.combat.after(1000, no_potions.destroy)
             self.combat.after(1000, self.buttons)
+    def mana_potion(self):
+        if self.hero.inventory["Potions"][2]["count"] > 0:
+            mana_potion = tk.Label(self.combat, text=f"You used a {self.hero.inventory['Potions'][2]['name']}!! and restored {self.hero.inventory['Potions'][2]['mana']}", font=("Arial", 30), bg="purple")
+            mana_potion.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+
+            self.hero.mana += self.hero.inventory["Potions"][2]["mana"]
+            self.hero.inventory["Potions"][2]["count"] -= 1
+            if self.hero.health > self.max_hp:
+                self.hero.health = self.max_hp
+            self.healthbarf()
+            self.combat.update_idletasks()
+            self.combat.after(1000, mana_potion.destroy)
+            self.combat.after(1000, self.ene_turn)
+        else:
+            no_potions = tk.Label(self.combat, text="You have no health potions left!!", font=("Arial", 30), bg="purple")
+            no_potions.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+            self.combat.update_idletasks()
+            self.combat.after(1000, no_potions.destroy)
+            self.combat.after(1000, self.buttons)
     def spell_window(self):
         self.weapon_pouch.destroy()
         self.potion_pouch.destroy()
@@ -319,7 +338,7 @@ class combat_UI:
 
 
 d = hero(100, [], 100, 100, 10, {"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": None}, 1, 0, 10, 0, 0, None, 10, 0)
-d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50, "count":1}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}
+d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":1}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 3}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}
 e = slime_battle.slime(30, 10, 1, False, 0)
 a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None, 0, d.strength)
 a.fight()
