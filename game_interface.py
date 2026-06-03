@@ -10,6 +10,7 @@ import time
 import math
 import subprocess
 import combat_ui
+import slime_battle
 
 AMBIENT_COLOR = (20, 20, 20)
 SPRITE_SCALING = 3.5
@@ -38,7 +39,7 @@ class Interface(arcade.View):
         self.tile_map = None
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
-        self.player_hero = hero(money=500, inventory=[], hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5, mana=100)
+        self.player_hero = hero(money=500, inventory=[], hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5, mana=100, dot=0)
         self.monster_list = monster
         self.player_light = None
     def setup(self):
@@ -129,17 +130,26 @@ class Interface(arcade.View):
         ENC_NUM = random.randint(1,10)
         if ENC_CHANCE == ENC_NUM:
             MONST_CHOICE = random.randint(1,4)
+            h = hero.hero(100, [], 100, 100, 10, {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":1}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 3}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}, 1, 0, 10, 0, 0, None, 10, 0)
             if MONST_CHOICE == 1:
-                subprocess.run([ combat_ui.determine_enemy("slime"), combat_ui.create_combat_ui(),])
+                e = slime_battle.slime(40, 5, 3, False, 0)
+                a = combat_ui.combat_UI(None, None, None, None, None, h.health, e.hp, None, None, None, None, e, True, h, None, None, None, None, None, None, 0, h.strength)
+                a.fight()
                 return
             elif MONST_CHOICE == 2:
-                subprocess.run([combat_ui.determine_enemy("skeleton"), combat_ui.create_combat_ui()])
+                e = skeleton_battle.skeleton(30, 15, 5, False, 10, 10)
+                a = combat_ui.combat_UI(None, None, None, None, None, h.health, e.hp, None, None, None, None, e, True, h, None, None, None, None, None, None, 0, h.strength)
+                a.fight()
                 return
             elif MONST_CHOICE == 3:
-                subprocess.run([combat_ui.determine_enemy("witch"), combat_ui.create_combat_ui()])
+                e = monster.witch(60, 15, 8, False, 0)
+                a = combat_ui.combat_UI(None, None, None, None, None, h.health, e.hp, None, None, None, None, e, True, h, None, None, None, None, None, None, 0, h.strength)
+                a.fight()
                 return
             elif MONST_CHOICE == 4:
-                subprocess.run([combat_ui.determine_enemy("goblin"), combat_ui.create_combat_ui()])
+                e = monster.goblin(30, 8, 4, False, 0)
+                a = combat_ui.combat_UI(None, None, None, None, None, h.health, e.hp, None, None, None, None, e, True, h, None, None, None, None, None, None, 0, h.strength)
+                a.fight()
                 return
 
     def on_update(self, delta_time):
