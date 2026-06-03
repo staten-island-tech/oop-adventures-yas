@@ -6,16 +6,9 @@ import hero
 
 class goblin(monster):
     def __init__(self, hp, attack, level, dead):
-        self.hp = hp
-        self.attack = attack
-        self.level = level
-        self.dead = dead
-    def slash(self,hp,attack,level):
-        damage = (1+attack*(level/100))
-        hero.health -= damage
-        print(f"The goblin slashes for {damage} damage!")
-    def punch(self):
-        damage = (self.attack)
-        hero.health -= damage
-        print(f"The goblin punches for {damage} damage!")
-        
+        super().__init__("goblin", hp, attack, level, dead, 0)
+    def strike(self, hero):
+        hurt = (self.attack * 1.5)
+        hero.health -= hurt
+        round(hero.health)
+        return hurt
