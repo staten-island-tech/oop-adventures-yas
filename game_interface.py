@@ -130,11 +130,14 @@ class Interface(arcade.View):
         if ENC_CHANCE == ENC_NUM:
             MONST_CHOICE = random.randint(1,4)
             if MONST_CHOICE == 1:
-                print("A goblin appears!")
+                subprocess.run([ combat_ui.determine_enemy("slime"), combat_ui.create_combat_ui(),])
+                return
             elif MONST_CHOICE == 2:
-                print("A skeleton appears!")
+                subprocess.run([combat_ui.determine_enemy("skeleton"), combat_ui.create_combat_ui()])
+                return
             elif MONST_CHOICE == 3:
-                print("A zombie appears!")
+                subprocess.run([combat_ui.determine_enemy("witch"), combat_ui.create_combat_ui()])
+                return
             elif MONST_CHOICE == 4:
                 subprocess.run([combat_ui.determine_enemy("goblin"), combat_ui.create_combat_ui()])
                 return
