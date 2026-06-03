@@ -4,7 +4,7 @@ import tkinter as tk
 
 class witch(monster):
     def __init__(self, hp, attack, level, dead, mana):
-        super().__init__("witch", hp, attack, level, dead)
+        super().__init__("witch", hp, attack, level, dead, 0)
         self.spells = ["fireball","bind","weaken"]
         self.mana = mana
     def attack(self):

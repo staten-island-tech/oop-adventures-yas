@@ -19,20 +19,24 @@ class hero():
         self.dot = dot
 
 
-    def attack(self, monster, strength,dot):
+    def attack(self, monster, strength,dot, armor):
         dmg =(1*(1+(strength/100))) + dot
         dmg = round(dmg)
-        monster.hp -= dmg
+        monster.armor -= dmg
+        if monster.armor < 0 or monster.armor == 0:
+            monster.hp -= dmg
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
             monster.dead = True
         return dmg
 
-    def weapon_attack(self, monster, weapon, strength, dot):
+    def weapon_attack(self, monster, weapon, strength, dot, armor):
         dmg = (weapon *(strength/10)) + dot
         dmg = round(dmg)
-        monster.hp -= dmg
+        monster.armor -= dmg
+        if monster.armor < 0 or monster.armor == 0:
+            monster.hp -= dmg
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
@@ -41,10 +45,12 @@ class hero():
 
 
     
-    def spell(self,equipped_spell, monster, dot):
+    def spell(self,equipped_spell, monster, dot, armor):
         dmg = equipped_spell["damage"] + dot
         dmg = round(dmg)
-        monster.hp -= dmg
+        monster.armor -= dmg
+        if monster.armor < 0 or monster.armor == 0:
+            monster.hp -= dmg
         if monster.hp < 0:
             monster.hp = 0
         if monster.hp == 0:
