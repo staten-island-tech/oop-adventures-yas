@@ -206,8 +206,8 @@ class combat_UI:
         self.combat.after(1000, self.buttons)
     def hero_spell_attack(self):
         self.turn = False
-        dmg = self.hero.spell(self.hero.equipped_spell, self.enemy, self.hero.dot, self.enemy.armor) 
         if self.enemy.armor > 0:
+            dmg = self.hero.spell(self.hero.equipped_spell, self.enemy, self.hero.dot) 
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
                 self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
@@ -215,6 +215,7 @@ class combat_UI:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage ({self.hero.dot} poison damage) to its armor!!", font=("Arial", 30), bg="purple")
                 self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
         else:
+            dmg = self.hero.spell(self.hero.equipped_spell, self.enemy, self.hero.dot)
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 20), bg="purple")
                 self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
@@ -262,7 +263,7 @@ class combat_UI:
         self.combat.after(1000, self.buttons)
     def hero_strike(self):
         self.turn = False
-        dmg = self.hero.attack(self.enemy, self.active_strength, self.hero.dot, self.enemy.armor) 
+        dmg = self.hero.attack(self.enemy, self.active_strength, self.hero.dot) 
         if self.enemy.armor > 0:
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
@@ -338,7 +339,7 @@ class combat_UI:
             self.buttons()
     def hero_weapon_attack(self):
         self.turn = False
-        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon]["dmg"], self.active_strength, self.hero.dot, self.enemy.armor) 
+        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon]["dmg"], self.active_strength, self.hero.dot) 
         if self.enemy.armor > 0:
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
@@ -366,8 +367,8 @@ class combat_UI:
 
 d = hero(100, [], 100, 100, 10, {"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": None}, 1, 0, 10, 0, 0, None, 10, 0)
 d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":1}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 3}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}
-""" e = goblin_battle.goblin(30, 10, 1, False)
-e = skeleton_battle.skeleton(30, 15, 5, False, 10, 10) """
-e = slime_battle.slime(40, 5, 3, False, 0)
+""" e = goblin_battle.goblin(30, 10, 1, False) """
+e = skeleton_battle.skeleton(30, 15, 5, False, 10, 10)
+""" e = slime_battle.slime(40, 5, 3, False, 0) """
 a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None, 0, d.strength)
 a.fight()

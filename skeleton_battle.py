@@ -9,8 +9,8 @@ class skeleton(monster):
         self.weapon_dmg = weapon_dmg
     def strike(self, hero):
         hurt = ((self.attack * 1.5)+self.weapon_dmg)
+        hurt = round(hurt)
         hero.health -= hurt
-        hero.health = round(hero.health)
         return hurt
 
 
