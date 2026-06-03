@@ -5,6 +5,11 @@ from hero import hero
 from spell import SpellShopInterface
 from arcade.future.light import Light, LightLayer
 import monster
+import threading
+import time
+import math
+import subprocess
+import combat_ui
 
 AMBIENT_COLOR = (20, 20, 20)
 SPRITE_SCALING = 3.5
@@ -14,10 +19,11 @@ WINDOW_HEIGHT = 1280
 WINDOW_TITLE = "The Unbinding of Isaac"
 VIEWPORT_MARGIN = 600
 GRAVITY = 0
-
-
+ENC_CHANCE = random.randint(1,10)
+ENC_NUM = 6
 CAMERA_SPEED = 0.1
 PLAYER_MOVEMENT_SPEED = 3
+MONST_CHOICE = random.randint(1,4)
 
 class Interface(arcade.View):
     def __init__(self):
@@ -117,6 +123,22 @@ class Interface(arcade.View):
             self.left_pressed = False
         elif key == arcade.key.RIGHT:
             self.right_pressed = False
+
+    def monster_chance(self):
+        ENC_CHANCE = random.randint(1,10)
+        ENC_NUM = random.randint(1,10)
+        if ENC_CHANCE == ENC_NUM:
+            MONST_CHOICE = random.randint(1,4)
+            if MONST_CHOICE == 1:
+                print("A goblin appears!")
+            elif MONST_CHOICE == 2:
+                print("A skeleton appears!")
+            elif MONST_CHOICE == 3:
+                print("A zombie appears!")
+            elif MONST_CHOICE == 4:
+                subprocess.run([combat_ui.determine_enemy("goblin"), combat_ui.create_combat_ui()])
+                return
+
     def on_update(self, delta_time):
         self.player_sprite.change_x = 0
         self.player_sprite.change_y = 0
@@ -131,6 +153,9 @@ class Interface(arcade.View):
         self.player_light.position = self.player_sprite.position
         self.physics_engine.update()
         self.scroll_to_player()
+        timer = threading.Timer(1.0, self.monster_chance)
+        timer.start()
+
     def scroll_to_player(self):
 
         target_x = self.player_sprite.center_x
