@@ -1,7 +1,7 @@
 import monster
 import random 
 import tkinter as tk
-
+import hero
 class witch(monster):
     def __init__(self, hp, attack, level, dead, mana):
         super().__init__("witch", hp, attack, level, dead, 0)
@@ -16,17 +16,17 @@ class witch(monster):
         elif attack == "weaken":
             self.weaken()
     def fireball(self, player):
-        "player.hp-=10"
+        hero.health -= 10
         self.mana -= 5
     def bind(self, player):
-        "player.hp -=2"
+        hero.health -= 2
         "skip next player turn"
         self.mana -= 12
     def weaken(self, player):
-        "player.hp -=2"
-        "weaken next player attack"
+        hero.health -= 2
+        hero.attack -= 4
         self.mana -= 8
         def generate(self):
             self.attack = self.level * 1.5
             self.hp = self.level * 2
-            self.mana = self.level *1.7
+            self.mana = self.level * 1.7

@@ -4,10 +4,10 @@ from ShopInterface import ShopInterface
 from hero import hero
 from spell import SpellShopInterface
 from arcade.future.light import Light, LightLayer
-
+import monster
 
 AMBIENT_COLOR = (20, 20, 20)
-SPRITE_SCALING = 4
+SPRITE_SCALING = 3.5
 WALL_SCALING = 4
 WINDOW_WIDTH = 1920
 WINDOW_HEIGHT = 1280
@@ -32,7 +32,8 @@ class Interface(arcade.View):
         self.tile_map = None
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
-        self.player_hero = hero(money=500, hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5, weapon=10)
+        self.player_hero = hero(money=500, inventory=[], hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5, mana=100)
+        self.monster_list = monster
         self.player_light = None
     def setup(self):
 
@@ -44,8 +45,8 @@ class Interface(arcade.View):
 
 
         self.tile_map = arcade.load_tilemap(
-            "test_map.json",
-            scaling=SPRITE_SCALING,
+            "main_map.json",
+            scaling=WALL_SCALING,
             layer_options=layer_options,
         )
 
@@ -60,13 +61,13 @@ class Interface(arcade.View):
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player_sprite, walls=self.scene["Object_Layer"]
         )
-        radius = 150
+        radius = 200
         mode = 'soft'
         color = arcade.csscolor.WHITE
         self.player_light = Light(0, 0, radius, color, mode)
 
-        self.player_sprite.center_x = 800
-        self.player_sprite.center_y = 800
+        self.player_sprite.center_x = 300
+        self.player_sprite.center_y = 3000
         
         self.background_color = arcade.color.BISTRE
 
@@ -80,8 +81,10 @@ class Interface(arcade.View):
             self.player_list.draw()
         self.light_layer.draw(ambient_color=AMBIENT_COLOR)
         self.camera_gui.use()
-        arcade.draw_text("Press SPACE to turn lantern on/off.", 10, 10, arcade.color.WHITE, 20)
-
+        arcade.draw_text("press SPACE to turn lantern on/off.", 10, 10, arcade.color.WHITE, 20)
+        arcade.draw_text("press O to open the spell inventory", 10, 40, arcade.color.WHITE, 20)
+        arcade.draw_text("press S to open shop", 10, 70, arcade.color.WHITE, 20)
+        arcade.draw_text("F11 to toggle fullscreen", 10, 100, arcade.color.WHITE, 20)
     def on_key_press(self, key, modifiers):
         if key == arcade.key.UP:
             self.up_pressed = True

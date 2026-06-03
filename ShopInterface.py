@@ -71,7 +71,7 @@ class ShopInterface(arcade.View):
             print("bought health potion")
             self.gold_label.text = f"gold: {self.player_hero.money}"
         else:
-            print("not enough gold")
+            print("not enough gold" )
 
     def on_close(self, event):
         self.window.show_view(self.game_view)

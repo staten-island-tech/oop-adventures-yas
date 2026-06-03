@@ -1,7 +1,7 @@
 import random 
 from monster import monster
 import tkinter as tk
-
+import hero
 class skeleton(monster):
     def __init__(self, hp, attack, level, dead, armor, weapon_dmg):
         super().__init__("skeleton", hp, attack, level, dead, 20)

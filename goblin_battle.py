@@ -1,6 +1,7 @@
 from monster import monster
 import random 
 import tkinter as tk
+import hero
 
 
 class goblin(monster):
