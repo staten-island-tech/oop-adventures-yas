@@ -87,9 +87,9 @@ class combat_UI:
         self.run.destroy()
         self.strike = tk.Button(self.combat, text="Basic Strike!!", font=("Arial", 60 ), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_strike()] )
         self.strike.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        self.slash = tk.Button(self.combat, text="Weapon Attack!!", font=("Arial", 45), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_strike()])
+        self.slash = tk.Button(self.combat, text="Weapon Attack!!", font=("Arial", 45), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_weapon_attack()])
         self.slash.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        self.spell_attack = tk.Button(self.combat, text="Spell Attack!!", font=("Arial", 45), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_strike()])
+        self.spell_attack = tk.Button(self.combat, text="Spell Attack!!", font=("Arial", 45), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_spell_attack()])
         self.spell_attack.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
         self.combat.update_idletasks()
     def run_window(self):
@@ -116,11 +116,11 @@ class combat_UI:
         self.weapon_pouch.destroy()
         self.potion_pouch.destroy()
         self.spell_wheel.destroy()
-        potion1 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][0]['name']}, Count: {self.hero.inventory['Potions'][0]['count']}" , font=("Arial", 20), command=lambda: [self.health_potion(), potion1.destroy(), potion2.destroy(), potion3.destroy()])
+        potion1 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][0]['name']}, Count: {self.hero.inventory['Potions'][0]['count']}" , font=("Arial", 20), command=lambda: [ potion1.destroy(), potion2.destroy(), potion3.destroy(), self.health_potion()])
         potion1.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        potion2 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][1]['name']}, Count: {self.hero.inventory['Potions'][1]['count']}" , font=("Arial", 20), command=lambda: [self.strength_potion(), potion1.destroy(), potion2.destroy(), potion3.destroy()])
+        potion2 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][1]['name']}, Count: {self.hero.inventory['Potions'][1]['count']}" , font=("Arial", 20), command=lambda:  [potion1.destroy(), potion2.destroy(), potion3.destroy(), self.strength_potion()])
         potion2.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        potion3 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][2]['name']}, Count: {self.hero.inventory['Potions'][2]['count']}" , font=("Arial", 20), command=lambda: [self.mana_potion(), potion1.destroy(), potion2.destroy(), potion3.destroy()])
+        potion3 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][2]['name']}, Count: {self.hero.inventory['Potions'][2]['count']}" , font=("Arial", 20), command=lambda: [ potion1.destroy(), potion2.destroy(), potion3.destroy(), self.mana_potion()])
         potion3.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
     def strength_potion(self):
         if self.hero.inventory["Potions"][1]["count"] > 0:
