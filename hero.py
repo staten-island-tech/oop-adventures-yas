@@ -2,7 +2,7 @@ import random
 import monster
 
 class hero():
-    def __init__(self,money, inventory, hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,stat_points,armor,mana, dot):
+    def __init__(self,money, inventory, hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,armor,mana, dot):
         self.money = money
         self.inventory = []
         self.hunger = hunger
@@ -13,7 +13,6 @@ class hero():
         self.charisma = charisma
         self.xp_req = xp_req
         self.xp = xp
-        self.stat_points = stat_points
         self.armor = armor
         self.mana = mana
         self.dot = dot
@@ -60,12 +59,12 @@ class hero():
             monster.dead = True
         return dmg
 
-    def level(self,xp,xp_req,level,stat_points):
+    def level(self,xp,xp_req,level):
         if self.xp >= self.xp_req:
             self.level+=1
             self.xp_req +=10
             self.xp = 0
-            self.stat_points +=1
+
         
 
 
