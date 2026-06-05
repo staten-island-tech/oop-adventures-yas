@@ -4,6 +4,7 @@ import monster
 import slime_battle
 import goblin_battle
 import skeleton_battle
+import witch_battle
 from hero import hero
 from PIL import Image, ImageTk
 import spell 
@@ -84,11 +85,11 @@ class combat_UI:
         self.attackb.destroy()
         self.inventory.destroy()
         self.run.destroy()
-        self.strike = tk.Button(self.combat, text="Basic Strike!!", font=("Arial", 60 ), command=self.hero_strike)
+        self.strike = tk.Button(self.combat, text="Basic Strike!!", font=("Arial", 60 ), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_strike()] )
         self.strike.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        self.slash = tk.Button(self.combat, text="Weapon Attack!!", font=("Arial", 45), command= self.hero_weapon_attack)
+        self.slash = tk.Button(self.combat, text="Weapon Attack!!", font=("Arial", 45), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_strike()])
         self.slash.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        self.spell_attack = tk.Button(self.combat, text="Spell Attack!!", font=("Arial", 45), command= self.hero_spell_attack)
+        self.spell_attack = tk.Button(self.combat, text="Spell Attack!!", font=("Arial", 45), command=lambda: [self.strike.destroy(), self.slash.destroy(), self.spell_attack.destroy(), self.hero_strike()])
         self.spell_attack.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
         self.combat.update_idletasks()
     def run_window(self):
@@ -115,10 +116,12 @@ class combat_UI:
         self.weapon_pouch.destroy()
         self.potion_pouch.destroy()
         self.spell_wheel.destroy()
-        potion1 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][0]['name']}, Count: {self.hero.inventory['Potions'][0]['count']}" , font=("Arial", 20), command=lambda: [self.health_potion(), potion1.destroy(), potion2.destroy()])
+        potion1 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][0]['name']}, Count: {self.hero.inventory['Potions'][0]['count']}" , font=("Arial", 20), command=lambda: [self.health_potion(), potion1.destroy(), potion2.destroy(), potion3.destroy()])
         potion1.place(relx=0.2, rely=0.8, anchor=tk.CENTER, width=500, height=250)
-        potion2 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][1]['name']}, Count: {self.hero.inventory['Potions'][1]['count']}" , font=("Arial", 20), command=lambda: [self.strength_potion(), potion1.destroy(), potion2.destroy()])
+        potion2 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][1]['name']}, Count: {self.hero.inventory['Potions'][1]['count']}" , font=("Arial", 20), command=lambda: [self.strength_potion(), potion1.destroy(), potion2.destroy(), potion3.destroy()])
         potion2.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=500, height=250)
+        potion3 = tk.Button(self.combat, text=f"Type:{self.hero.inventory['Potions'][2]['name']}, Count: {self.hero.inventory['Potions'][2]['count']}" , font=("Arial", 20), command=lambda: [self.mana_potion(), potion1.destroy(), potion2.destroy(), potion3.destroy()])
+        potion3.place(relx=0.8, rely=0.8, anchor=tk.CENTER, width=500, height=250)
     def strength_potion(self):
         if self.hero.inventory["Potions"][1]["count"] > 0:
             strength_potion = tk.Label(self.combat, text=f"You used a {self.hero.inventory['Potions'][1]['name']}!! and gained {self.hero.inventory['Potions'][1]['strong']} strength for this battle", font=("Arial", 20), bg="purple")
@@ -307,9 +310,19 @@ class combat_UI:
             self.combat.after(1000, self.spell_attack.destroy)
             self.combat.after(1000, self.combat_loop)
     def ene_turn(self):
+        self.turn = True
         if self.enemy.species == "slime":
             edmg, psn = self.enemy.strike(self.hero)
             self.endmg = tk.Label (self.combat, text=f"you took {edmg} damage!! ({psn} poison damge)",wraplength= 250,  font=("Arial", 30), bg="purple")
+        elif self.enemy.species == "witch":
+            dmg, x = self.enemy.strike(self.hero, self)
+            if x == 1:
+                self.endmg = tk.Label (self.combat, text=f"you took {dmg} damage!!", font=("Arial", 20), bg="purple")
+            elif x == 2:
+                self.endmg = tk.Label (self.combat, text=f"you took {dmg} damage!! and were bound (will lose turn)", font=("Arial", 20), bg="purple")
+            elif x == 3:
+                self.endmg = tk.Label (self.combat, text=f"you took {dmg} damage!! and your strength was decreased", font=("Arial", 20), bg="purple")
+
         else:
             edmg = self.enemy.strike(self.hero)
             self.endmg = tk.Label (self.combat, text=f"you took {edmg} damage!!", font=("Arial", 30), bg="purple")
@@ -325,7 +338,6 @@ class combat_UI:
         else: 
             self.combat.update_idletasks()
             self.combat.after(1000, self.endmg.destroy)
-            self.turn = True
             self.combat.update_idletasks()
             self.combat_loop()
     def combat_loop(self):
@@ -367,8 +379,14 @@ class combat_UI:
 
 d = hero(100, [], 100, 100, 10, {"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": None}, 1, 0, 10, 0, 0, None, 10, 0)
 d.inventory = {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":1}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 3}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}
-""" e = goblin_battle.goblin(30, 10, 1, False) """
-e = skeleton_battle.skeleton(30, 15, 5, False, 10, 10)
-""" e = slime_battle.slime(40, 5, 3, False, 0) """
+abcd = 3
+if abcd == 1:
+    e = goblin_battle.goblin(30, 10, 1, False)
+elif abcd == 2:
+    e = skeleton_battle.skeleton(30, 15, 5, False, 10, 10)
+elif abcd == 3:
+    e = slime_battle.slime(40, 5, 3, False, 0) 
+elif abcd == 4:
+    e = witch_battle.witch(50, 10, 5, False)
 a = combat_UI(None, None, None, None, None, d.health, e.hp, None, None, None, None, e, True, d, None, None, None, None, None, None, 0, d.strength)
 a.fight()

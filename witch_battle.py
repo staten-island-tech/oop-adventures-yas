@@ -1,32 +1,35 @@
-import monster
+from monster import monster
 import random 
-import tkinter as tk
-import hero
+
+
 class witch(monster):
-    def __init__(self, hp, attack, level, dead, mana):
+    def __init__(self, hp, attack, level, dead):
         super().__init__("witch", hp, attack, level, dead, 0)
         self.spells = ["fireball","bind","weaken"]
-        self.mana = mana
-    def attack(self):
+    def strike(self, hero, a):
         attack = random.choice(self.spells)
         if attack == "fireball":
-            self.fireball()
+            return self.fireball(hero)
         elif attack == "bind":
-            self.bind()
+            return self.bind(hero, a)
         elif attack == "weaken":
-            self.weaken()
-    def fireball(self, player):
-        hero.health -= 10
-        self.mana -= 5
-    def bind(self, player):
-        hero.health -= 2
-        "skip next player turn"
-        self.mana -= 12
-    def weaken(self, player):
-        hero.health -= 2
-        hero.attack -= 4
-        self.mana -= 8
-        def generate(self):
-            self.attack = self.level * 1.5
-            self.hp = self.level * 2
-            self.mana = self.level * 1.7
+            return self.weaken(hero, a)
+    def fireball(self, hero):
+        dmg = self.attack * 3
+        dmg = round(dmg)
+        hero.health -= dmg
+        x=1
+        return dmg, x 
+    def bind(self, hero, a):
+        dmg = self.attack * 1.5
+        dmg = round(dmg)
+        hero.health -= dmg
+        a.turn = False
+        x=2
+        return dmg, x
+    def weaken(self, hero, a):
+        dmg = self.attack * 1.5
+        dmg = round(dmg)
+        a.active_strength -= 4
+        x=3
+        return dmg, x
