@@ -11,6 +11,8 @@ import math
 import subprocess
 import combat_ui
 import slime_battle
+import skeleton_battle
+import threading
 
 AMBIENT_COLOR = (20, 20, 20)
 SPRITE_SCALING = 3.5
@@ -25,7 +27,7 @@ ENC_NUM = 6
 CAMERA_SPEED = 0.1
 PLAYER_MOVEMENT_SPEED = 3
 MONST_CHOICE = random.randint(1,4)
-
+h = hero(100, [], 100, 100, 10, {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":1}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 3}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}, 1, 0, 10, 0, None, 10, 0)
 class Interface(arcade.View):
     def __init__(self):
         super().__init__()
@@ -39,7 +41,6 @@ class Interface(arcade.View):
         self.tile_map = None
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
-        self.player_hero = hero(money=500, inventory=[], hunger=100, health=100, strength=10, equipped_spell=None, level=1, charisma=5, xp_req=100, xp=0, stat_points=0, armor=5, mana=100, dot=0)
         self.monster_list = monster
         self.player_light = None
     def setup(self):
@@ -102,12 +103,12 @@ class Interface(arcade.View):
         elif key == arcade.key.RIGHT:
             self.right_pressed = True
         elif key == arcade.key.S: 
-            shop = ShopInterface(self.player_hero, self)
+            shop = ShopInterface(h, self)
             self.window.show_view(shop)
         elif key == arcade.key.F11:
             self.window.set_fullscreen(not self.window.fullscreen)
         elif key == arcade.key.O:
-            spell_shop = SpellShopInterface(self.player_hero, self)
+            spell_shop = SpellShopInterface(h, self)
             self.window.show_view(spell_shop)
         elif key == arcade.key.SPACE:
             if self.player_light in self.light_layer:
@@ -126,11 +127,10 @@ class Interface(arcade.View):
             self.right_pressed = False
 
     def monster_chance(self):
-        ENC_CHANCE = random.randint(1,10)
-        ENC_NUM = random.randint(1,10)
+        ENC_CHANCE = random.randint(1,300)
+        ENC_NUM = random.randint(1,300)
         if ENC_CHANCE == ENC_NUM:
             MONST_CHOICE = random.randint(1,4)
-            h = hero.hero(100, [], 100, 100, 10, {"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":2}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":1}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 3}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 5, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]}, 1, 0, 10, 0, 0, None, 10, 0)
             if MONST_CHOICE == 1:
                 e = slime_battle.slime(40, 5, 3, False, 0)
                 a = combat_ui.combat_UI(None, None, None, None, None, h.health, e.hp, None, None, None, None, e, True, h, None, None, None, None, None, None, 0, h.strength)

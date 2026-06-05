@@ -6,16 +6,16 @@ class ShopInterface(arcade.View):
     def __init__(self, player_hero: hero, game_view):
         super().__init__()
         self.background_color = arcade.color.DARK_SLATE_GRAY
-        self.player_hero = player_hero
         self.game_view = game_view
         self.ui = arcade.gui.UIManager()
         self.ui.enable()
+        self.player_hero = player_hero
 
         v_box = arcade.gui.UIBoxLayout(vertical=True, space_between=25)
 
         title_label = arcade.gui.UILabel(text="SHOP", text_color=arcade.color.GOLD, font_size=60)
         v_box.add(title_label)
-        
+
         gold_label = arcade.gui.UILabel(text=f"gold: {self.player_hero.money}", text_color=arcade.color.YELLOW, font_size=32)
         v_box.add(gold_label)
         self.gold_label = gold_label
@@ -71,7 +71,7 @@ class ShopInterface(arcade.View):
             print("bought health potion")
             self.gold_label.text = f"gold: {self.player_hero.money}"
         else:
-            print("not enough gold" )
+            print("not enough gold")
 
     def on_close(self, event):
         self.window.show_view(self.game_view)
