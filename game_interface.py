@@ -12,6 +12,8 @@ import subprocess
 import combat_ui
 import slime_battle
 import skeleton_battle
+import witch_battle
+import goblin_battle
 import threading
 
 AMBIENT_COLOR = (20, 20, 20)
@@ -142,12 +144,12 @@ class Interface(arcade.View):
                 a.fight()
                 return
             elif MONST_CHOICE == 3:
-                e = monster.witch(60, 15, 8, False, 0)
+                e = witch_battle.witch(60, 15, 8, False, 0)
                 a = combat_ui.combat_UI(None, None, None, None, None, h.health, e.hp, None, None, None, None, e, True, h, None, None, None, None, None, None, 0, h.strength)
                 a.fight()
                 return
             elif MONST_CHOICE == 4:
-                e = monster.goblin(30, 8, 4, False, 0)
+                e = goblin_battle.goblin(30, 8, 4, False, 0)
                 a = combat_ui.combat_UI(None, None, None, None, None, h.health, e.hp, None, None, None, None, e, True, h, None, None, None, None, None, None, 0, h.strength)
                 a.fight()
                 return
