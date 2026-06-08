@@ -168,7 +168,7 @@ class Interface(arcade.View):
         self.player_light.position = self.player_sprite.position
         self.physics_engine.update()
         self.scroll_to_player()
-        timer = threading.Timer(1.0, self.monster_chance)
+        timer = threading.Timer(5.0, self.monster_chance)
         timer.start()
 
     def scroll_to_player(self):
