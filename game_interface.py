@@ -110,9 +110,6 @@ class Interface(arcade.View):
             self.window.show_view(shop)
         elif key == arcade.key.F11:
             self.window.set_fullscreen(not self.window.fullscreen)
-        elif key == arcade.key.O:
-            spell_shop = SpellShopInterface(h, self)
-            self.window.show_view(spell_shop)
         elif key == arcade.key.SPACE:
             if self.player_light in self.light_layer:
                 self.light_layer.remove(self.player_light)
