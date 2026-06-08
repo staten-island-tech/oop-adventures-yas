@@ -297,6 +297,7 @@ class combat_UI:
         self.healthbarfg.place(relx=0.8, rely=0.2, anchor=tk.CENTER, width=300 * health_percentage, height=50)
     def determine_dead(self):
         if self.enemy.dead == True:
+            self.hero.xp += (self.enemy.level * 10)
             defeat = tk.Label(self.combat, text=f"You defeated the {self.enemy.species}!!", font=("Arial", 50), bg="purple")
             defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
             self.healthbarfg.destroy()
