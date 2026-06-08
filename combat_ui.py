@@ -10,7 +10,7 @@ from PIL import Image, ImageTk
 import spell 
 
 class combat_UI:
-    def __init__(self, enemy_sprite, combat, attckb, inventory, run, max_hp, enemy_max_hp, fdmg, strike, slash, endmg, enemy, turn, hero, healthbarfgf, healthbarfg, spell_attack, potion_pouch, weapon_pouch, spell_wheel, weapon, active_strength):
+    def __init__(self, enemy_sprite, combat, attckb, inventory, run, max_hp, enemy_max_hp, fdmg, strike, slash, endmg, enemy, turn, hero, healthbarfgf, healthbarfg, spell_attack, potion_pouch, weapon_pouch, spell_wheel, weapon_num, active_strength):
         self.enemy_sprite = enemy_sprite  
         self.combat = None  
         self.attckb = None
@@ -31,7 +31,7 @@ class combat_UI:
         self.potion_pouch = None
         self.weapon_pouch = None
         self.spell_wheel = None
-        self.weapon = weapon
+        self.weapon_num = weapon_num
         self.active_strength = active_strength
     def determine_enemy(self):
         if self.enemy.species == "slime":
@@ -209,6 +209,12 @@ class combat_UI:
         self.combat.after(1000, self.buttons)
     def hero_spell_attack(self):
         self.turn = False
+        if self.hero.equipped_spell == None:
+            no_spell = tk.Label(self.combat, text="You have no spell equipped!!", font=("Arial", 30), bg="purple")
+            no_spell.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+            self.combat.update_idletasks()
+            self.combat.after(1000, no_spell.destroy)
+            self.combat.after(1000, self.buttons)
         if self.enemy.armor > 0:
             dmg = self.hero.spell(self.hero.equipped_spell, self.enemy, self.hero.dot) 
             if self.hero.dot == 0:
@@ -253,14 +259,14 @@ class combat_UI:
     def select_weapon_1(self):
         selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory["Weapons"][0]['name']}!!", font=("Arial", 50), bg="purple")
         selected.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
-        self.weapon = 0
+        self.weapon_num = 0
         self.combat.update_idletasks()
         self.combat.after(1000, selected.destroy)
         self.combat.after(1000, self.buttons)
     def select_weapon_2(self):
         selected = tk.Label(self.combat, text=f"You equipped {self.hero.inventory["Weapons"][1]['name']}!!", font=("Arial", 50), bg="purple")
         selected.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
-        self.weapon = 1
+        self.weapon_num = 1
         self.combat.update_idletasks()
         self.combat.after(1000, selected.destroy)
         self.combat.after(1000, self.buttons)
@@ -352,7 +358,7 @@ class combat_UI:
             self.buttons()
     def hero_weapon_attack(self):
         self.turn = False
-        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon]["dmg"], self.active_strength, self.hero.dot) 
+        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon_num]["dmg"], self.active_strength, self.hero.dot) 
         if self.enemy.armor > 0:
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")

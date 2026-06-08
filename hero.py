@@ -2,9 +2,9 @@ import random
 import monster
 
 class hero():
-    def __init__(self,money, inventory, hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,armor,mana, dot):
+    def __init__(self,money, inventory, hunger,health,strength,equipped_spell,level,charisma,xp_req,xp,armor,mana, dot, max_hp):
         self.money = money
-        self.inventory = []
+        self.inventory = inventory
         self.hunger = hunger
         self.health = health
         self.strength = strength
@@ -16,6 +16,12 @@ class hero():
         self.armor = armor
         self.mana = mana
         self.dot = dot
+        self.max_hp = max_hp
+    def generate(self):
+        self.health += self.level * 1.5 
+        self.strength += self.level * 2
+        self.mana += self.level * 2
+        self.max_hp = self.health
 
 
     def attack(self, monster, strength,dot):
