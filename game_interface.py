@@ -168,9 +168,10 @@ class Interface(arcade.View):
         self.player_light.position = self.player_sprite.position
         self.physics_engine.update()
         self.scroll_to_player()
-        timer = threading.Timer(5.0, self.monster_chance)
+        timer = threading.Timer(3.0, self.monster_chance)
         timer.start()
-
+        if h.health <=0:
+            arcade.exit()
     def scroll_to_player(self):
 
         target_x = self.player_sprite.center_x
