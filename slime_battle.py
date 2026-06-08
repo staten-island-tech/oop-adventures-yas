@@ -6,7 +6,7 @@ import math
 
 class slime(monster):
     def __init__(self, hp, attack, level, dead, dot):
-        super().__init__("slime", hp, attack, level, dead, 10)
+        super().__init__("slime", hp, attack, level, dead, 0)
         self.dot = dot
 
     def strike(self, hero):
