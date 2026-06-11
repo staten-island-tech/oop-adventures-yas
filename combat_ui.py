@@ -217,20 +217,34 @@ class combat_UI:
             self.combat.after(1000, self.buttons)
         if self.enemy.armor > 0:
             dmg = self.hero.spell(self.hero.equipped_spell, self.enemy, self.hero.dot) 
-            if self.hero.dot == 0:
-                self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
-                self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
+            if dmg == "Not enough mana":
+                no_mana = tk.Label(self.combat, text="Not enough mana to cast this spell!!", font=("Arial", 30), bg="purple")
+                no_mana.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+                self.combat.update_idletasks()
+                self.combat.after(1000, no_mana.destroy)
+                self.combat.after(1000, self.buttons)
             else:
-                self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage ({self.hero.dot} poison damage) to its armor!!", font=("Arial", 30), bg="purple")
-                self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
+                if self.hero.dot == 0:
+                    self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
+                    self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
+                else:
+                    self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage ({self.hero.dot} poison damage) to its armor!!", font=("Arial", 30), bg="purple")
+                    self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
         else:
             dmg = self.hero.spell(self.hero.equipped_spell, self.enemy, self.hero.dot)
-            if self.hero.dot == 0:
-                self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 20), bg="purple")
-                self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
+            if dmg == "Not enough mana":
+                no_mana = tk.Label(self.combat, text="Not enough mana to cast this spell!!", font=("Arial", 30), bg="purple")
+                no_mana.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+                self.combat.update_idletasks()
+                self.combat.after(1000, no_mana.destroy)
+                self.combat.after(1000, self.buttons)
             else:
-                self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!! ({self.hero.dot} poison damage)", font=("Arial", 30), bg="purple")
-                self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
+                if self.hero.dot == 0:
+                    self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!!", font=("Arial", 20), bg="purple")
+                    self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
+                else:
+                    self.fdmg = tk.Label (self.combat, text=f"{dmg} damage!! ({self.hero.dot} poison damage)", font=("Arial", 30), bg="purple")
+                    self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
         if self.hero.equipped_spell["secondary"] == "stun":
             x = random.randint(1, 2)
             if x == 1:
@@ -272,8 +286,8 @@ class combat_UI:
         self.combat.after(1000, self.buttons)
     def hero_strike(self):
         self.turn = False
-        dmg = self.hero.attack(self.enemy, self.active_strength, self.hero.dot) 
-        if self.enemy.armor > 0:
+        dmg, x = self.hero.attack(self.enemy, self.active_strength, self.hero.dot) 
+        if x == 1:
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
                 self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)
@@ -304,11 +318,14 @@ class combat_UI:
     def determine_dead(self):
         if self.enemy.dead == True:
             self.hero.xp += (self.enemy.level * 10)
+            self.hero.money += 15
             defeat = tk.Label(self.combat, text=f"You defeated the {self.enemy.species}!!", font=("Arial", 50), bg="purple")
             defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+            self.hero.level_up()
             self.healthbarfg.destroy()
             self.combat.update_idletasks()
             self.combat.after(2000, self.combat.destroy)
+            
         else:
             self.combat.update_idletasks()
             self.combat.after(1000, self.fdmg.destroy)
@@ -358,8 +375,8 @@ class combat_UI:
             self.buttons()
     def hero_weapon_attack(self):
         self.turn = False
-        dmg = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon_num]["dmg"], self.active_strength, self.hero.dot) 
-        if self.enemy.armor > 0:
+        dmg, x = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon_num]["dmg"], self.active_strength, self.hero.dot) 
+        if x == 1:
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
                 self.fdmg.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=100, width=700)

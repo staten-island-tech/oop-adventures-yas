@@ -10,7 +10,7 @@ class slime(monster):
         self.dot = dot
 
     def strike(self, hero):
-        hurt = (self.attack * 1.5)
+        hurt = (self.attack * 1)
         hero.health -= hurt
         round(hero.health)
         self.dot += 2

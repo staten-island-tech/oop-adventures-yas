@@ -20,16 +20,18 @@ class ShopInterface(arcade.View):
         v_box.add(gold_label)
         self.gold_label = gold_label
 
-        buy_sword_button = arcade.gui.UIFlatButton(text="  buy sword - 100 gold", width=400, height=80)
-        buy_sword_button.on_click = self.on_buy_sword
-        v_box.add(buy_sword_button)
-            
-        buy_shield_button = arcade.gui.UIFlatButton(text="  buy shield - 150 gold", width=400, height=80)
-        buy_shield_button.on_click = self.on_buy_shield
-        v_box.add(buy_shield_button)
+
 
         buy_potion_button = arcade.gui.UIFlatButton(text=" buy health potion - 50 gold", width=400, height=80)
-        buy_potion_button.on_click = self.on_buy_potion
+        buy_potion_button.on_click = self.on_buy_hpotion
+        v_box.add(buy_potion_button)
+
+        buy_potion_button = arcade.gui.UIFlatButton(text=" buy strength potion - 50 gold", width=400, height=80)
+        buy_potion_button.on_click = self.on_buy_spotion
+        v_box.add(buy_potion_button)
+
+        buy_potion_button = arcade.gui.UIFlatButton(text=" buy mana potion - 50 gold", width=400, height=80)
+        buy_potion_button.on_click = self.on_buy_mpotion
         v_box.add(buy_potion_button)
 
         close_button = arcade.gui.UIFlatButton(text="Close (ESC)", width=400, height=80)
@@ -64,10 +66,28 @@ class ShopInterface(arcade.View):
         else:
             print("not enough gold")
 
-    def on_buy_potion(self, event):
+    def on_buy_hpotion(self, event):
         if self.player_hero.money >= 50:
             self.player_hero.money -= 50
-            self.player_hero.inventory.append("health_potion")
+            self.player_hero.inventory["Potions"][0]["count"] += 1
+            print("bought health potion")
+            self.gold_label.text = f"gold: {self.player_hero.money}"
+        else:
+            print("not enough gold")
+
+    def on_buy_spotion(self, event):
+        if self.player_hero.money >= 50:
+            self.player_hero.money -= 50
+            self.player_hero.inventory["Potions"][1]["count"] += 1
+            print("bought health potion")
+            self.gold_label.text = f"gold: {self.player_hero.money}"
+        else:
+            print("not enough gold")
+
+    def on_buy_mpotion(self, event):
+        if self.player_hero.money >= 50:
+            self.player_hero.money -= 50
+            self.player_hero.inventory["Potions"][2]["count"] += 1
             print("bought health potion")
             self.gold_label.text = f"gold: {self.player_hero.money}"
         else:

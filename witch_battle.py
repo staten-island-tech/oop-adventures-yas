@@ -15,21 +15,22 @@ class witch(monster):
         elif attack == "weaken":
             return self.weaken(hero, a)
     def fireball(self, hero):
-        dmg = self.attack * 3
+        dmg = self.attack * 2
         dmg = round(dmg)
         hero.health -= dmg
         x=1
         return dmg, x 
     def bind(self, hero, a):
-        dmg = self.attack * 1.5
+        dmg = self.attack * 1.1
         dmg = round(dmg)
         hero.health -= dmg
         a.turn = False
         x=2
         return dmg, x
     def weaken(self, hero, a):
-        dmg = self.attack * 1.5
+        dmg = self.attack * 1.1
         dmg = round(dmg)
+        hero.health -= dmg
         a.active_strength -= 4
         x=3
         return dmg, x
