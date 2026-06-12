@@ -321,6 +321,7 @@ class combat_UI:
             self.hero.money += 15
             defeat = tk.Label(self.combat, text=f"You defeated the {self.enemy.species}!!", font=("Arial", 50), bg="purple")
             defeat.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+            self.hero.dot = 0
             self.hero.level_up()
             self.healthbarfg.destroy()
             self.combat.update_idletasks()
@@ -375,7 +376,14 @@ class combat_UI:
             self.buttons()
     def hero_weapon_attack(self):
         self.turn = False
-        dmg, x = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon_num]["dmg"], self.active_strength, self.hero.dot) 
+        if self.hero.inventory["Weapons"][self.weapon_num]["dur"] <= 0:
+            no_durability = tk.Label(self.combat, text=f"Your {self.hero.inventory['Weapons'][self.weapon_num]['name']} has no durability left and broke!!", font=("Arial", 30), bg="purple")
+            no_durability.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
+            self.combat.update_idletasks()
+            self.combat.after(1000, no_durability.destroy)
+            self.combat.after(1000, self.buttons)
+            return
+        dmg, x = self.hero.weapon_attack(self.enemy, self.hero.inventory["Weapons"][self.weapon_num], self.active_strength, self.hero.dot) 
         if x == 1:
             if self.hero.dot == 0:
                 self.fdmg = tk.Label (self.combat, text=f"you did {dmg} damage to its armor!!", font=("Arial", 20), bg="purple")
@@ -397,5 +405,6 @@ class combat_UI:
         self.healthbarf()
         self.healthbare()
         self.buttons()
+        self.combat.attributes("-fullscreen", True)
         self.combat.mainloop()
     

@@ -14,7 +14,7 @@ class monster():
         "player health - hurt"
     def generate(self):
         self.attack = self.level * 1.5
-        self.hp = self.level * 2
+        self.hp = (self.level * 2) + 10
 
 
 

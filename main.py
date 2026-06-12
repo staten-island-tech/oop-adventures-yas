@@ -28,7 +28,7 @@ ENC_NUM = 6
 CAMERA_SPEED = 0.1
 PLAYER_MOVEMENT_SPEED = 3
 MONST_CHOICE = random.randint(1,4)
-h = hero(100,{"Weapons": [{"name": "Sword", "dmg": 10}, {"name": "Dagger", "dmg": 5}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":0}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":0}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 0}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 10, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]} , 100, 30, 10,None, 1, 0, 10, 0, None, 10, 0, 100)
+h = hero(100,{"Weapons": [{"name": "Sword", "dmg": 10, "dur" : 50}, {"name": "Dagger", "dmg": 5, "dur": 75}], "Potions":[{"name": "Health Potion", "heal": 50, "strong":0,"mana":0,"count":0}, {"name": "Strength Potion", "heal": 0,"strong":50,"mana":0, "count":0}, {"name":"Mana Potion", "heal": 0, "strong":0, "mana":10, "count": 0}], "Spells":[{"name": "Fireball", "damage": 25, "mana_req": 10, "secondary": "None"}, {"name": "Zap", "damage": 5, "mana_req": 2, "secondary":"stun"}, {"name": "Poison Spray", "damage": 10, "mana_req": 3, "secondary":"poison"}]} , 100, 30, 10,None, 1, 0, 10, 0, None, 10, 0, 100)
 h.generate()
 class Interface(arcade.View):
     def __init__(self):

@@ -41,8 +41,9 @@ class hero():
 
     def weapon_attack(self, monster, weapon, strength, dot):
         x=0
-        dmg = (weapon *(1+(strength/35))) + dot
+        dmg = (weapon["dmg"] *(1+(strength/35))) + dot
         dmg = round(dmg)
+        weapon["dur"] -= 5
         if monster.armor < 0 or monster.armor == 0:
             monster.hp -= dmg
         else:
