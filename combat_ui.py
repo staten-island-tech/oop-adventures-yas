@@ -163,6 +163,7 @@ class combat_UI:
             mana_potion.place(relx=0.5, rely=0.5, anchor=tk.CENTER, height=200, width=1000)
 
             self.hero.mana += self.hero.inventory["Potions"][2]["mana"]
+            print (self.hero.mana)
             self.hero.inventory["Potions"][2]["count"] -= 1
             if self.hero.health > self.max_hp:
                 self.hero.health = self.max_hp
